@@ -1,6 +1,8 @@
 package com.lunchteam.lunchrestapi.api.entity;
 
 import com.lunchteam.lunchrestapi.security.dto.Authority;
+import java.time.LocalDateTime;
+import javax.annotation.Nonnull;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -11,6 +13,8 @@ import javax.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Getter
 @NoArgsConstructor
@@ -25,15 +29,48 @@ public class MemberEntity {
 
     private String email;
 
+    private String name;
+
     private String password;
+
+    private String delYn;
+
+    private int useCount;
+
+    private String groupId;
+
+    @CreationTimestamp
+    private LocalDateTime insertDateTime;
+
+    @UpdateTimestamp
+    private LocalDateTime updateDateTime;
 
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
-    @Builder
-    public MemberEntity(String email, String password, Authority authority) {
+    /**
+     * 회원 가입 빌더
+     * @param email email
+     * @param name 사용자 이름
+     * @param password 비밀번호
+     * @param delYn 'N'
+     * @param useCount 0
+     * @param authority {@link Authority}.ROLE_USER
+     */
+    @Builder(builderClassName = "UserSignUp", builderMethodName = "UserSignUp")
+    public MemberEntity(
+        String email,
+        String name,
+        String password,
+        String delYn,
+        int useCount,
+        Authority authority
+    ) {
         this.email = email;
+        this.name = name;
         this.password = password;
+        this.delYn = delYn;
+        this.useCount = useCount;
         this.authority = authority;
     }
 }

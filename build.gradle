@@ -44,8 +44,8 @@ dependencies {
 
 
 	// QueryDSL Start
-	runtimeOnly("com.querydsl:querydsl-core")
-	runtimeOnly("com.querydsl:querydsl-jpa")
+	implementation("com.querydsl:querydsl-core")
+	implementation("com.querydsl:querydsl-jpa")
 
 	// querydsl JPAAnnotationProcessor 사용 지정
 	annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jpa"
