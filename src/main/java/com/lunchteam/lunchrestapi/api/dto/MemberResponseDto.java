@@ -12,6 +12,7 @@ public class MemberResponseDto {
 
     private String email;
     private String name;
+    private String loginId;
     private String groupId;
     private int useCount;
 
@@ -19,6 +20,7 @@ public class MemberResponseDto {
         return new MemberResponseDto(
             member.getEmail(),
             member.getName(),
+            member.getLoginId(),
             member.getGroupId(),
             member.getUseCount()
         );

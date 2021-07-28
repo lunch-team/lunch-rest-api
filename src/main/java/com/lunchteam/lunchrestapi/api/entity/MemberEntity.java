@@ -2,7 +2,6 @@ package com.lunchteam.lunchrestapi.api.entity;
 
 import com.lunchteam.lunchrestapi.security.dto.Authority;
 import java.time.LocalDateTime;
-import javax.annotation.Nonnull;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -29,6 +28,8 @@ public class MemberEntity {
 
     private String email;
 
+    private String loginId;
+
     private String name;
 
     private String password;
@@ -50,16 +51,19 @@ public class MemberEntity {
 
     /**
      * 회원 가입 빌더
-     * @param email email
-     * @param name 사용자 이름
-     * @param password 비밀번호
-     * @param delYn 'N'
-     * @param useCount 0
+     *
+     * @param email     email
+     * @param name      사용자 이름
+     * @param loginId   로그인 아이디
+     * @param password  비밀번호
+     * @param delYn     'N'
+     * @param useCount  0
      * @param authority {@link Authority}.ROLE_USER
      */
     @Builder(builderClassName = "UserSignUp", builderMethodName = "UserSignUp")
     public MemberEntity(
         String email,
+        String loginId,
         String name,
         String password,
         String delYn,
@@ -67,6 +71,7 @@ public class MemberEntity {
         Authority authority
     ) {
         this.email = email;
+        this.loginId = loginId;
         this.name = name;
         this.password = password;
         this.delYn = delYn;

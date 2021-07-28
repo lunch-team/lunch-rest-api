@@ -1,5 +1,6 @@
 package com.lunchteam.lunchrestapi.api.repository;
 
+import com.lunchteam.lunchrestapi.api.dto.MemberRequestDto;
 import com.lunchteam.lunchrestapi.api.entity.MemberEntity;
 import com.lunchteam.lunchrestapi.api.entity.QMemberEntity;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -34,13 +35,40 @@ public class MemberRepositorySupport extends QuerydslRepositorySupport {
         return list.stream().findFirst();
     }
 
+    @Transactional
     public Optional<MemberEntity> findById(Long id) {
         List<MemberEntity> list = queryFactory.selectFrom(qMemberEntity)
             .where(
                 qMemberEntity.delYn.eq("N")
-                    .and(qMemberEntity.id.eq(id))
+       )
+            .fetch();
+        return list.stream().findFirst();
+    }
+
+    @Transactional
+    public Optional<MemberEntity> findByEmailAndName(MemberRequestDto memberRequestDto) {
+        List<MemberEntity> list = queryFactory.selectFrom(qMemberEntity)
+            .where(
+                qMemberEntity.delYn.eq("N")
+                    .and(qMemberEntity.email.eq(memberRequestDto.getEmail()))
+                    .and(qMemberEntity.name.eq(memberRequestDto.getName()))
             )
             .fetch();
         return list.stream().findFirst();
+    }
+
+    public Optional<MemberEntity> findByEmailAndLoginId(MemberRequestDto memberRequestDto) {
+        List<MemberEntity> list = queryFactory.selectFrom(qMemberEntity)
+            .where(
+                qMemberEntity.delYn.eq("N")
+                    .and(qMemberEntity.email.eq(memberRequestDto.getEmail()))
+                    .and(qMemberEntity.loginId.eq(memberRequestDto.getName()))
+            )
+            .fetch();
+        return list.stream().findFirst();
+    }
+
+    public Optional<MemberEntity> updatePasswordByLoginId(MemberRequestDto memberRequestDto) {
+        return null;
     }
 }

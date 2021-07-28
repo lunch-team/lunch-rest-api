@@ -1,5 +1,6 @@
 package com.lunchteam.lunchrestapi.api.service;
 
+import com.lunchteam.lunchrestapi.api.dto.MemberRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.MemberResponseDto;
 import com.lunchteam.lunchrestapi.api.repository.MemberRepositorySupport;
 import com.lunchteam.lunchrestapi.security.SecurityUtil;
@@ -29,5 +30,42 @@ public class MemberService {
         return memberRepositorySupport.findById(SecurityUtil.getCurrentMemberId())
             .map(MemberResponseDto::of)
             .orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다."));
+    }
+
+    @Transactional
+    public MemberResponseDto findId(MemberRequestDto memberRequestDto) {
+
+        return memberRepositorySupport.findByEmailAndName(memberRequestDto)
+            .map(MemberResponseDto::of)
+            .orElseThrow(() -> new RuntimeException("유저 정보가 없습니다."));
+    }
+
+    @Transactional
+    public String findPw(MemberRequestDto memberRequestDto) {
+
+        MemberResponseDto memberResponseDto = memberRepositorySupport
+            .findByEmailAndLoginId(memberRequestDto)
+            .map(MemberResponseDto::of)
+            .orElse(null);
+
+        if(memberRequestDto == null) {
+            return "no_member_info";
+        }
+
+        assert memberResponseDto != null;
+        return memberResponseDto.getLoginId();
+    }
+
+    @Transactional
+    public String resetPassword(MemberRequestDto memberRequestDto) {
+
+        MemberResponseDto memberResponseDto = memberRepositorySupport
+            .updatePasswordByLoginId(memberRequestDto)
+            .map(MemberResponseDto::of)
+            .orElse(null);
+
+        // TODO: password reset
+        assert memberResponseDto != null;
+        return memberResponseDto.getEmail();
     }
 }

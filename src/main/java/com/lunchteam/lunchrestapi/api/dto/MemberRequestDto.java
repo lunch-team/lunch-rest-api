@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class MemberRequestDto {
 
     private String email;
+    private String loginId;
     private String name;
     private String password;
 
@@ -21,6 +22,7 @@ public class MemberRequestDto {
         return MemberEntity.UserSignUp()
             .email(email)
             .name(name)
+            .loginId(loginId)
             .password(passwordEncoder.encode(password))
             .delYn("N")
             .useCount(0)
@@ -29,6 +31,6 @@ public class MemberRequestDto {
     }
 
     public UsernamePasswordAuthenticationToken toAuthentication() {
-        return new UsernamePasswordAuthenticationToken(email, password);
+        return new UsernamePasswordAuthenticationToken(loginId, password);
     }
 }

@@ -28,13 +28,18 @@ public class AuthService {
     private final RefreshTokenRepository refreshTokenRepository;
 
     @Transactional
-    public MemberResponseDto signup(MemberRequestDto memberRequestDto) {
+    public String signup(MemberRequestDto memberRequestDto) {
         if (memberRepository.existsByEmail(memberRequestDto.getEmail())) {
-            throw new RuntimeException("이미 가입되어 있는 유저입니다");
+            return "exist_email";
+        }
+
+        if (memberRepository.existsByLoginId(memberRequestDto.getLoginId())) {
+            return "exist_login_id";
         }
 
         MemberEntity member = memberRequestDto.toMember(passwordEncoder);
-        return MemberResponseDto.of(memberRepository.save(member));
+        MemberResponseDto.of(memberRepository.save(member));
+        return null;
     }
 
     @Transactional
@@ -75,7 +80,8 @@ public class AuthService {
             .getAuthentication(tokenRequestDto.getAccessToken());
 
         // 3. 저장소에서 Member ID 를 기반으로 Refresh Token 값 가져옴
-        RefreshTokenDto refreshToken = refreshTokenRepository.findByKeyToken(authentication.getName())
+        RefreshTokenDto refreshToken = refreshTokenRepository
+            .findByKeyToken(authentication.getName())
             .orElseThrow(() -> new RuntimeException("로그아웃 된 사용자입니다."));
 
         // 4. Refresh Token 일치하는지 검사
