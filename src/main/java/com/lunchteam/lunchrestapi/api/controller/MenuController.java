@@ -8,6 +8,7 @@ import com.lunchteam.lunchrestapi.api.response.ErrorResponse;
 import com.lunchteam.lunchrestapi.api.response.StatusEnum;
 import com.lunchteam.lunchrestapi.api.service.MenuService;
 import java.util.List;
+import java.util.Optional;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -43,19 +44,21 @@ public class MenuController {
     }
 
     @PostMapping("/getRandomMenu")
-    public ResponseEntity<? extends BasicResponse> getRandomMenu() {
-        String error;
+    public ResponseEntity<? extends BasicResponse> getRandomMenu(
+        @RequestBody MenuRequestDto menuRequestDto
+    ) {
+        List<MenuEntity> result;
         try {
-            error = menuService.getRandomMenu();
+            result = menuService.getRandomMenu(menuRequestDto.getRandomNumber());
         } catch (Exception e) {
             return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ErrorResponse(StatusEnum.INTERNAL_SERVER_ERROR));
         }
 
-        return error == null
-            ? ResponseEntity.noContent().build()
-            : ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(error));
+        return result != null
+            ? ResponseEntity.ok(new CommonResponse<>(result))
+            : ResponseEntity.internalServerError().build();
     }
 
     @GetMapping("/getAllMenu")

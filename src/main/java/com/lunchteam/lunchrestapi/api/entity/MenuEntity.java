@@ -29,12 +29,23 @@ public class MenuEntity {
 
     private String useYn;
 
+    private int visitCount;
+
+    private LocalDateTime recentVisit;
+
     @CreationTimestamp
     private LocalDateTime insertDateTime;
 
     @UpdateTimestamp
     private LocalDateTime updateDateTime;
 
+    /**
+     * 메뉴 추가
+     *
+     * @param name     상호명
+     * @param location 도로명 주소
+     * @param menuType 메뉴 타입
+     */
     @Builder(builderClassName = "AddMenu", builderMethodName = "AddMenu")
     public MenuEntity(
         String name,
@@ -44,5 +55,15 @@ public class MenuEntity {
         this.location = location;
         this.menuType = menuType;
         this.useYn = "Y";
+    }
+
+    /**
+     * 최근 방문 시점 갱신
+     * @param id 메뉴 아이디
+     */
+    @Builder(builderClassName = "VisitStamp", builderMethodName = "VisitStamp")
+    public MenuEntity(Long id) {
+        this.id = id;
+        this.recentVisit = LocalDateTime.now();
     }
 }

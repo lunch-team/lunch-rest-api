@@ -2,7 +2,10 @@ package com.lunchteam.lunchrestapi.api.repository;
 
 import com.lunchteam.lunchrestapi.api.entity.MenuEntity;
 import com.lunchteam.lunchrestapi.api.entity.QMenuEntity;
+import com.lunchteam.lunchrestapi.util.RandomUtil;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
@@ -24,13 +27,24 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
     }
 
     @Transactional
-    public Optional<MenuEntity> getRandomMenu(int count) {
-        List<?> totalCnt = queryFactory.selectFrom(qMenuEntity)
-            .where(qMenuEntity.useYn.eq("Y")).fetch();
-        log.debug(String.valueOf(totalCnt.get(0)));
-        List<MenuEntity> list = queryFactory.selectFrom(qMenuEntity)
-            .where(qMenuEntity.useYn.eq("Y")).fetch();
+    public List<MenuEntity> getRandomMenu(int count) {
+        long totalCnt = queryFactory.selectFrom(qMenuEntity)
+            .where(qMenuEntity.useYn.eq("Y")).fetchCount();
+        log.debug("total count: " + totalCnt + ", random number: " + count);
+        if (count < totalCnt || count > 0) {
+            List<MenuEntity> tmp = new ArrayList<>();
+            List<MenuEntity> list = queryFactory.selectFrom(qMenuEntity)
+                .where(qMenuEntity.useYn.eq("Y")).fetch();
 
-        return list.stream().findAny();
+            int[] randomInt = RandomUtil.getRandomNumberArray(0, (int) totalCnt - 1, count);
+            log.debug(Arrays.toString(randomInt));
+            for (int i = 0; i < count; i++) {
+                log.debug(String.valueOf(list.get(randomInt[i])));
+                tmp.add(list.get(randomInt[i]));
+            }
+            return tmp;
+        } else {
+            return null;
+        }
     }
 }

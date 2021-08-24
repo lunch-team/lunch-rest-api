@@ -6,6 +6,7 @@ import com.lunchteam.lunchrestapi.api.entity.MenuEntity;
 import com.lunchteam.lunchrestapi.api.repository.MenuRepository;
 import com.lunchteam.lunchrestapi.api.repository.MenuRepositorySupport;
 import java.util.List;
+import java.util.Optional;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,9 +32,8 @@ public class MenuService {
     }
 
     @Transactional
-    public String getRandomMenu() {
-        menuRepositorySupport.getRandomMenu(1);
-        return null;
+    public List<MenuEntity> getRandomMenu(int count) {
+        return menuRepositorySupport.getRandomMenu(count);
     }
 
     @Transactional
