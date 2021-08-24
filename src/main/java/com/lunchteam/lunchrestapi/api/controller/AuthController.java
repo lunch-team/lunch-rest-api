@@ -10,6 +10,7 @@ import com.lunchteam.lunchrestapi.api.service.AuthService;
 import com.lunchteam.lunchrestapi.api.service.MemberService;
 import com.lunchteam.lunchrestapi.security.dto.TokenDto;
 import com.lunchteam.lunchrestapi.security.dto.TokenRequestDto;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<? extends BasicResponse> signup(
-        @RequestBody MemberRequestDto memberRequestDto) {
+        @Valid @RequestBody MemberRequestDto memberRequestDto) {
         String error;
         try {
             error = authService.signup(memberRequestDto);
@@ -76,13 +77,19 @@ public class AuthController {
     public ResponseEntity<? extends BasicResponse> findPw(
         @RequestBody MemberRequestDto memberRequestDto) {
         String result = memberService.findPw(memberRequestDto);
-        if (!"".equals(result)) {
+        if (memberRequestDto.getLoginId().equals(result)) {
             return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponse<>(result));
         } else {
             return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ErrorResponse(StatusEnum.INTERNAL_SERVER_ERROR));
+                .status(HttpStatus.CONFLICT)
+                .body(new ErrorResponse(result));
         }
+    }
+
+    @PostMapping("/resetPassword")
+    public ResponseEntity<? extends BasicResponse> resetPassword(
+        @RequestBody MemberRequestDto memberRequestDto) {
+        return null;
     }
 }

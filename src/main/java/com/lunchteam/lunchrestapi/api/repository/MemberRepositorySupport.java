@@ -62,13 +62,19 @@ public class MemberRepositorySupport extends QuerydslRepositorySupport {
             .where(
                 qMemberEntity.delYn.eq("N")
                     .and(qMemberEntity.email.eq(memberRequestDto.getEmail()))
-                    .and(qMemberEntity.loginId.eq(memberRequestDto.getName()))
+                    .and(qMemberEntity.loginId.eq(memberRequestDto.getLoginId()))
             )
             .fetch();
         return list.stream().findFirst();
     }
 
     public Optional<MemberEntity> updatePasswordByLoginId(MemberRequestDto memberRequestDto) {
+        queryFactory.update(qMemberEntity)
+            .set(qMemberEntity.password, memberRequestDto.getNewPassword())
+            .where(
+                qMemberEntity.loginId.eq(memberRequestDto.getLoginId())
+                    .and(qMemberEntity.delYn.eq("N"))
+            ).execute();
         return null;
     }
 }

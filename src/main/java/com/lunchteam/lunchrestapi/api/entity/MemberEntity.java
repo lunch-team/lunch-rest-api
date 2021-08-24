@@ -26,8 +26,10 @@ public class MemberEntity {
     @Column(name = "member_id")
     public Long id;
 
+    @Column(unique = true)
     private String email;
 
+    @Column(unique = true)
     private String loginId;
 
     private String name;

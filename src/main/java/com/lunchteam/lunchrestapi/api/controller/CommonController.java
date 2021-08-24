@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(name = "/api")
+@RequestMapping("/api")
 public class CommonController {
 
     @GetMapping("/connectionTest")

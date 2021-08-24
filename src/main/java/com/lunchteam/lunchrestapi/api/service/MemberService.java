@@ -46,13 +46,13 @@ public class MemberService {
         MemberResponseDto memberResponseDto = memberRepositorySupport
             .findByEmailAndLoginId(memberRequestDto)
             .map(MemberResponseDto::of)
-            .orElse(null);
+            .orElseGet(this::returnNull);
 
-        if(memberRequestDto == null) {
+        if(memberResponseDto == null) {
+            log.warn("no member info");
             return "no_member_info";
         }
 
-        assert memberResponseDto != null;
         return memberResponseDto.getLoginId();
     }
 
@@ -67,5 +67,9 @@ public class MemberService {
         // TODO: password reset
         assert memberResponseDto != null;
         return memberResponseDto.getEmail();
+    }
+
+    private MemberResponseDto returnNull() {
+        return null;
     }
 }
