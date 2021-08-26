@@ -1,5 +1,6 @@
 package com.lunchteam.lunchrestapi.api.repository;
 
+import com.lunchteam.lunchrestapi.api.dto.MenuModifyRequestDto;
 import com.lunchteam.lunchrestapi.api.entity.MenuEntity;
 import com.lunchteam.lunchrestapi.api.entity.QMenuEntity;
 import com.lunchteam.lunchrestapi.util.RandomUtil;
@@ -7,7 +8,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
@@ -46,5 +46,22 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
         } else {
             return null;
         }
+    }
+
+    @Transactional
+    public List<MenuEntity> getAllMenu() {
+        return queryFactory.selectFrom(qMenuEntity)
+            .where(qMenuEntity.useYn.eq("Y")).fetch();
+    }
+
+    @Transactional
+    public long modifyMenuById(MenuEntity menu) {
+        return queryFactory.update(qMenuEntity)
+            .set(qMenuEntity.name, menu.getName())
+            .set(qMenuEntity.menuType, menu.getMenuType())
+            .set(qMenuEntity.location, menu.getLocation())
+            .set(qMenuEntity.updateDateTime, menu.getUpdateDateTime())
+            .where(qMenuEntity.id.eq(menu.getId()))
+            .execute();
     }
 }

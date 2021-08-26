@@ -1,6 +1,7 @@
 package com.lunchteam.lunchrestapi.api.repository;
 
 import com.lunchteam.lunchrestapi.api.entity.MenuEntity;
+import javax.annotation.Nonnull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,4 +16,6 @@ public interface MenuRepository extends JpaRepository<MenuEntity, Long> {
      * @return bool
      */
     boolean existsByNameAndLocation(String name, String location);
+
+    boolean existsById(@Nonnull Long id);
 }

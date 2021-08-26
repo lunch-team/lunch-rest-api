@@ -57,6 +57,20 @@ public class MenuEntity {
         this.useYn = "Y";
     }
 
+    @Builder(builderClassName = "ModifyMenu", builderMethodName = "ModifyMenu")
+    public MenuEntity(
+        Long id,
+        String name,
+        String location,
+        String menuType
+    ) {
+        this.id = id;
+        this.name = name;
+        this.location = location;
+        this.menuType = menuType;
+        this.updateDateTime = LocalDateTime.now();
+    }
+
     /**
      * 최근 방문 시점 갱신
      * @param id 메뉴 아이디
