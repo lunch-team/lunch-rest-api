@@ -6,7 +6,6 @@ import com.lunchteam.lunchrestapi.api.entity.MenuEntity;
 import com.lunchteam.lunchrestapi.api.response.BasicResponse;
 import com.lunchteam.lunchrestapi.api.response.CommonResponse;
 import com.lunchteam.lunchrestapi.api.response.ErrorResponse;
-import com.lunchteam.lunchrestapi.api.response.StatusEnum;
 import com.lunchteam.lunchrestapi.api.service.MenuService;
 import com.lunchteam.lunchrestapi.handler.ErrorHandler;
 import java.util.List;
@@ -44,9 +43,8 @@ public class MenuController {
         try {
             error = menuService.addMenu(menuRequestDto);
         } catch (Exception e) {
-            return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ErrorResponse(StatusEnum.INTERNAL_SERVER_ERROR));
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
         }
         return error == null
             ? ResponseEntity.noContent().build()
@@ -61,9 +59,8 @@ public class MenuController {
         try {
             result = menuService.getRandomMenu(menuRequestDto.getRandomNumber());
         } catch (Exception e) {
-            return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ErrorResponse(StatusEnum.INTERNAL_SERVER_ERROR));
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
         }
 
         return result != null
@@ -77,9 +74,8 @@ public class MenuController {
         try {
             result = menuService.getAllMenu();
         } catch (Exception e) {
-            return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ErrorResponse(StatusEnum.INTERNAL_SERVER_ERROR));
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
         }
         return result != null
             ? ResponseEntity.status(HttpStatus.OK)
@@ -102,9 +98,28 @@ public class MenuController {
         try {
             error = menuService.modifyMenu(menuModifyRequestDto);
         } catch (Exception e) {
-            return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ErrorResponse(StatusEnum.INTERNAL_SERVER_ERROR));
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+        return error == null
+            ? ResponseEntity.noContent().build()
+            : ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(error));
+    }
+
+    @PostMapping("/deleteMenu")
+    public ResponseEntity<? extends BasicResponse> deleteMenu(
+        @RequestBody MenuModifyRequestDto menuModifyRequestDto) {
+
+        String error;
+        if (menuModifyRequestDto.getId() == null) {
+            log.warn("No Id");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        try {
+            error = menuService.deleteMenu(menuModifyRequestDto.getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
         }
         return error == null
             ? ResponseEntity.noContent().build()

@@ -43,8 +43,9 @@ public class MenuService {
         return menuRepositorySupport.getAllMenu();
     }
 
+    @Transactional
     public String modifyMenu(MenuModifyRequestDto menuModifyRequestDto) {
-        if (!menuRepository.existsById(menuModifyRequestDto.getId())) {
+        if (!menuRepository.existsByIdAndUseYn(menuModifyRequestDto.getId(), "Y")) {
             return "no_menu";
         }
         MenuEntity menu = MenuEntity.ModifyMenu()
@@ -55,6 +56,16 @@ public class MenuService {
             .build();
         long result = menuRepositorySupport.modifyMenuById(menu);
         log.info("modifyMenuById result: " + result);
-        return null;
+        return result > 0 ? null : "no_menu";
+    }
+
+    @Transactional
+    public String deleteMenu(Long id) {
+        if (!menuRepository.existsByIdAndUseYn(id, "Y")) {
+            return "no_menu";
+        }
+        long result = menuRepositorySupport.deleteMenuById(id);
+        log.info("deleteMenuById result: " + result);
+        return result > 0 ? null : "no_menu";
     }
 }

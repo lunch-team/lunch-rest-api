@@ -17,5 +17,5 @@ public interface MenuRepository extends JpaRepository<MenuEntity, Long> {
      */
     boolean existsByNameAndLocation(String name, String location);
 
-    boolean existsById(@Nonnull Long id);
+    boolean existsByIdAndUseYn(@Nonnull Long id, String useYn);
 }
