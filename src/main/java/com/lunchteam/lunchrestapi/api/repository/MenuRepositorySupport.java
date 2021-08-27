@@ -4,6 +4,7 @@ import com.lunchteam.lunchrestapi.api.entity.MenuEntity;
 import com.lunchteam.lunchrestapi.api.entity.QMenuEntity;
 import com.lunchteam.lunchrestapi.util.RandomUtil;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -68,6 +69,15 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
     public long deleteMenuById(Long id) {
         return queryFactory.update(qMenuEntity)
             .set(qMenuEntity.useYn, "N")
+            .where(qMenuEntity.id.eq(id), qMenuEntity.useYn.eq("Y"))
+            .execute();
+    }
+
+    @Transactional
+    public long addVisitCountById(Long id) {
+        return queryFactory.update(qMenuEntity)
+            .set(qMenuEntity.visitCount, qMenuEntity.visitCount.add(1))
+            .set(qMenuEntity.recentVisit, LocalDateTime.now())
             .where(qMenuEntity.id.eq(id), qMenuEntity.useYn.eq("Y"))
             .execute();
     }

@@ -1,6 +1,7 @@
 package com.lunchteam.lunchrestapi.api.entity;
 
 import java.time.LocalDateTime;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -8,6 +9,7 @@ import javax.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -29,6 +31,7 @@ public class MenuEntity {
 
     private String useYn;
 
+    @ColumnDefault("0")
     private int visitCount;
 
     private LocalDateTime recentVisit;

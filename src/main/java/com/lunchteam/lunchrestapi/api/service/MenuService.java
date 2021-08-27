@@ -68,4 +68,17 @@ public class MenuService {
         log.info("deleteMenuById result: " + result);
         return result > 0 ? null : "no_menu";
     }
+
+    public MenuEntity visitMenu(MenuModifyRequestDto menuModifyRequestDto) {
+        if (!menuRepository.existsByIdAndUseYn(menuModifyRequestDto.getId(), "Y")) {
+            return null;
+        }
+        long result = menuRepositorySupport.addVisitCountById(menuModifyRequestDto.getId());
+        log.info("visit menu result: " + result);
+        if (result > 0) {
+            return menuRepository.findById(menuModifyRequestDto.getId()).orElse(null);
+        } else {
+            return null;
+        }
+    }
 }
