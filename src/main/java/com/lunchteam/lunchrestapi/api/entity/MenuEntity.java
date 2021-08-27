@@ -29,6 +29,7 @@ public class MenuEntity {
 
     private String name;
 
+    @Column(columnDefinition = "varchar(1) default 'Y'")
     private String useYn;
 
     @ColumnDefault("0")
@@ -57,7 +58,6 @@ public class MenuEntity {
         this.name = name;
         this.location = location;
         this.menuType = menuType;
-        this.useYn = "Y";
     }
 
     @Builder(builderClassName = "ModifyMenu", builderMethodName = "ModifyMenu")
@@ -76,6 +76,7 @@ public class MenuEntity {
 
     /**
      * 최근 방문 시점 갱신
+     *
      * @param id 메뉴 아이디
      */
     @Builder(builderClassName = "VisitStamp", builderMethodName = "VisitStamp")

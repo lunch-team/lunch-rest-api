@@ -3,9 +3,13 @@ package com.lunchteam.lunchrestapi.api.service;
 import com.lunchteam.lunchrestapi.api.dto.MenuModifyRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.MenuRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.MenuResponseDto;
+import com.lunchteam.lunchrestapi.api.dto.MenuTypeRequestDto;
+import com.lunchteam.lunchrestapi.api.dto.MenuTypeResponseDto;
 import com.lunchteam.lunchrestapi.api.entity.MenuEntity;
+import com.lunchteam.lunchrestapi.api.entity.MenuTypeEntity;
 import com.lunchteam.lunchrestapi.api.repository.MenuRepository;
 import com.lunchteam.lunchrestapi.api.repository.MenuRepositorySupport;
+import com.lunchteam.lunchrestapi.api.repository.MenuTypeRepository;
 import java.util.List;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +22,7 @@ import org.springframework.stereotype.Service;
 public class MenuService {
 
     private final MenuRepository menuRepository;
+    private final MenuTypeRepository menuTypeRepository;
     private final MenuRepositorySupport menuRepositorySupport;
 
     @Transactional
@@ -80,5 +85,17 @@ public class MenuService {
         } else {
             return null;
         }
+    }
+
+    public String addMenuType(MenuTypeRequestDto menuTypeRequestDto) {
+        if (menuRepositorySupport.existsByMenuType(menuTypeRequestDto.getMenuType())) {
+            return "exists_menu_type";
+        }
+        MenuTypeResponseDto.of(menuTypeRepository.save(menuTypeRequestDto.toMenuTypeEntity()));
+        return null;
+    }
+
+    public List<MenuTypeEntity> getMenuType() {
+        return menuRepositorySupport.getMenuType();
     }
 }

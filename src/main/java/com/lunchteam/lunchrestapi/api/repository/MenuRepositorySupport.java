@@ -1,7 +1,10 @@
 package com.lunchteam.lunchrestapi.api.repository;
 
 import com.lunchteam.lunchrestapi.api.entity.MenuEntity;
+import com.lunchteam.lunchrestapi.api.entity.MenuTypeEntity;
 import com.lunchteam.lunchrestapi.api.entity.QMenuEntity;
+import com.lunchteam.lunchrestapi.api.entity.QMenuLogEntity;
+import com.lunchteam.lunchrestapi.api.entity.QMenuTypeEntity;
 import com.lunchteam.lunchrestapi.util.RandomUtil;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
@@ -20,6 +23,8 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
     private final JPAQueryFactory queryFactory;
 
     QMenuEntity qMenuEntity = QMenuEntity.menuEntity;
+    QMenuTypeEntity qMenuTypeEntity = QMenuTypeEntity.menuTypeEntity;
+    QMenuLogEntity qMenuLogEntity = QMenuLogEntity.menuLogEntity;
 
     public MenuRepositorySupport(JPAQueryFactory queryFactory) {
         super(MenuEntity.class);
@@ -80,5 +85,19 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
             .set(qMenuEntity.recentVisit, LocalDateTime.now())
             .where(qMenuEntity.id.eq(id), qMenuEntity.useYn.eq("Y"))
             .execute();
+    }
+
+    @Transactional
+    public boolean existsByMenuType(String menuType) {
+        return queryFactory.selectFrom(qMenuTypeEntity)
+            .where(qMenuTypeEntity.menuType.eq(menuType), qMenuTypeEntity.useYn.eq("Y"))
+            .fetchCount() > 0;
+    }
+
+    @Transactional
+    public List<MenuTypeEntity> getMenuType() {
+        return queryFactory.selectFrom(qMenuTypeEntity)
+            .where(qMenuTypeEntity.useYn.eq("Y"))
+            .fetch();
     }
 }

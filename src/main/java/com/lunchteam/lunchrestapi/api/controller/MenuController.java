@@ -2,7 +2,9 @@ package com.lunchteam.lunchrestapi.api.controller;
 
 import com.lunchteam.lunchrestapi.api.dto.MenuModifyRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.MenuRequestDto;
+import com.lunchteam.lunchrestapi.api.dto.MenuTypeRequestDto;
 import com.lunchteam.lunchrestapi.api.entity.MenuEntity;
+import com.lunchteam.lunchrestapi.api.entity.MenuTypeEntity;
 import com.lunchteam.lunchrestapi.api.response.BasicResponse;
 import com.lunchteam.lunchrestapi.api.response.CommonResponse;
 import com.lunchteam.lunchrestapi.api.response.ErrorResponse;
@@ -140,4 +142,46 @@ public class MenuController {
             return ResponseEntity.internalServerError().build();
         }
     }
+
+    @PostMapping("getVisitMenuList")
+    public ResponseEntity<? extends BasicResponse> getVisitMenuList(
+        @RequestBody MenuModifyRequestDto menuModifyRequestDto
+    ) {
+        try {
+            // TODO
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @PostMapping("addMenuType")
+    public ResponseEntity<? extends BasicResponse> addMenuType(
+        @RequestBody MenuTypeRequestDto menuTypeRequestDto
+    ) {
+        try {
+            String error = menuService.addMenuType(menuTypeRequestDto);
+            return error == null
+                ? ResponseEntity.noContent().build()
+                : ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(error));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @GetMapping("getMenuType")
+    public ResponseEntity<? extends BasicResponse> getMenuType() {
+        try {
+            List<MenuTypeEntity> result = menuService.getMenuType();
+            return result != null
+                ? ResponseEntity.ok(new CommonResponse<>(result))
+                : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
 }
