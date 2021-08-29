@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MenuRequestDto {
 
+    // 메뉴 id
+    private Long id;
     // 정확한 주소
     private String location;
     // 상호명
@@ -20,6 +22,8 @@ public class MenuRequestDto {
     private String menuType;
     // 랜덤으로 가져올 메뉴 개수
     private int randomNumber;
+
+    private DtoEnum order;
 
     /**
      * 메뉴 추가

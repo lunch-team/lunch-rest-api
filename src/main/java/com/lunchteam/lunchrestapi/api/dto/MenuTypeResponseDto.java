@@ -1,6 +1,8 @@
 package com.lunchteam.lunchrestapi.api.dto;
 
 import com.lunchteam.lunchrestapi.api.entity.MenuTypeEntity;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class MenuTypeResponseDto {
+public class MenuTypeResponseDto extends BasicResponseDto {
 
     private Long id;
     private String menuType;
@@ -20,5 +22,19 @@ public class MenuTypeResponseDto {
             menu.getMenuName(),
             menu.getMenuType()
         );
+    }
+
+    public static List<MenuTypeResponseDto> listOf(List<MenuTypeEntity> menus) {
+        if (!menus.isEmpty()) {
+            List<MenuTypeResponseDto> result = new ArrayList<>();
+
+            for (MenuTypeEntity entity : menus) {
+                result.add(MenuTypeResponseDto.of(entity));
+            }
+
+            return result;
+        } else {
+            return null;
+        }
     }
 }

@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -19,8 +20,15 @@ public class MenuLogEntity {
     @GeneratedValue
     private Long id;
 
-    private String menuId;
+    private Long menuId;
 
     @CreationTimestamp
     private LocalDateTime insertDateTime;
+
+    @Builder(builderClassName = "AddMenuLog", builderMethodName = "AddMenuLog")
+    public MenuLogEntity(
+        Long menuId
+    ) {
+        this.menuId = menuId;
+    }
 }

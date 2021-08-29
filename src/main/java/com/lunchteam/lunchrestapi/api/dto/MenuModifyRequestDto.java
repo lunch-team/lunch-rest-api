@@ -1,6 +1,7 @@
 package com.lunchteam.lunchrestapi.api.dto;
 
 import com.lunchteam.lunchrestapi.api.entity.MenuEntity;
+import com.lunchteam.lunchrestapi.api.entity.MenuLogEntity;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -36,6 +37,12 @@ public class MenuModifyRequestDto {
             .location(location)
             .name(name)
             .menuType(menuType)
+            .build();
+    }
+
+    public MenuLogEntity toMenuLog() {
+        return MenuLogEntity.AddMenuLog()
+            .menuId(id)
             .build();
     }
 }

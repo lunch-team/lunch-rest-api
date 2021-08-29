@@ -2,14 +2,15 @@ package com.lunchteam.lunchrestapi.api.controller;
 
 import com.lunchteam.lunchrestapi.api.dto.MenuModifyRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.MenuRequestDto;
+import com.lunchteam.lunchrestapi.api.dto.MenuResponseDto;
 import com.lunchteam.lunchrestapi.api.dto.MenuTypeRequestDto;
-import com.lunchteam.lunchrestapi.api.entity.MenuEntity;
-import com.lunchteam.lunchrestapi.api.entity.MenuTypeEntity;
+import com.lunchteam.lunchrestapi.api.dto.MenuTypeResponseDto;
 import com.lunchteam.lunchrestapi.api.response.BasicResponse;
-import com.lunchteam.lunchrestapi.api.response.CommonResponse;
 import com.lunchteam.lunchrestapi.api.response.ErrorResponse;
+import com.lunchteam.lunchrestapi.api.response.StatusEnum;
 import com.lunchteam.lunchrestapi.api.service.MenuService;
 import com.lunchteam.lunchrestapi.handler.ErrorHandler;
+import com.lunchteam.lunchrestapi.handler.ResultHandler;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -42,10 +43,8 @@ public class MenuController {
                 log.warn("Wrong Request.");
                 return errorResponse;
             }
-            String error = menuService.addMenu(menuRequestDto);
-            return error == null
-                ? ResponseEntity.noContent().build()
-                : ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(error));
+            StatusEnum result = menuService.addMenu(menuRequestDto);
+            return ResultHandler.setResult(result, HttpStatus.CONFLICT);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();
@@ -57,10 +56,10 @@ public class MenuController {
         @RequestBody MenuRequestDto menuRequestDto
     ) {
         try {
-            List<MenuEntity> result = menuService.getRandomMenu(menuRequestDto.getRandomNumber());
-            return result != null
-                ? ResponseEntity.ok(new CommonResponse<>(result))
-                : ResponseEntity.internalServerError().build();
+            List<MenuResponseDto> result
+                = MenuResponseDto.listOf(
+                menuService.getRandomMenu(menuRequestDto.getRandomNumber()));
+            return ResultHandler.setResult(result, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();
@@ -71,11 +70,9 @@ public class MenuController {
     @GetMapping("/getAllMenu")
     public ResponseEntity<? extends BasicResponse> getAllMenu() {
         try {
-            List<MenuEntity> result = menuService.getAllMenu();
-            return result != null
-                ? ResponseEntity.status(HttpStatus.OK)
-                .body(new CommonResponse<>(result))
-                : ResponseEntity.notFound().build();
+            List<MenuResponseDto> result =
+                MenuResponseDto.listOf(menuService.getAllMenu());
+            return ResultHandler.setResult(result, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();
@@ -95,10 +92,8 @@ public class MenuController {
                 return errorResponse;
             }
 
-            String error = menuService.modifyMenu(menuModifyRequestDto);
-            return error == null
-                ? ResponseEntity.noContent().build()
-                : ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(error));
+            StatusEnum result = menuService.modifyMenu(menuModifyRequestDto);
+            return ResultHandler.setResult(result, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();
@@ -115,10 +110,8 @@ public class MenuController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
 
-            String error = menuService.deleteMenu(menuModifyRequestDto.getId());
-            return error == null
-                ? ResponseEntity.noContent().build()
-                : ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(error));
+            StatusEnum result = menuService.deleteMenu(menuModifyRequestDto.getId());
+            return ResultHandler.setResult(result, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();
@@ -133,51 +126,49 @@ public class MenuController {
                 log.warn("No Id");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
-            MenuEntity menu = menuService.visitMenu(menuModifyRequestDto);
-            return menu != null
-                ? ResponseEntity.ok(new CommonResponse<>(menu))
-                : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResultHandler.setResult(
+                MenuResponseDto.of(menuService.visitMenu(menuModifyRequestDto)),
+                HttpStatus.NOT_FOUND
+            );
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();
         }
     }
 
-    @PostMapping("getVisitMenuList")
+    @PostMapping("/getVisitMenuList")
     public ResponseEntity<? extends BasicResponse> getVisitMenuList(
-        @RequestBody MenuModifyRequestDto menuModifyRequestDto
+        @RequestBody MenuRequestDto menuRequestDto
     ) {
         try {
-            // TODO
-            return null;
+            List<MenuResponseDto> result
+                = MenuResponseDto.listOf(menuService.getVisitMenuList(menuRequestDto));
+            return ResultHandler.setResult(result, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();
         }
     }
 
-    @PostMapping("addMenuType")
+    @PostMapping("/addMenuType")
     public ResponseEntity<? extends BasicResponse> addMenuType(
         @RequestBody MenuTypeRequestDto menuTypeRequestDto
     ) {
         try {
-            String error = menuService.addMenuType(menuTypeRequestDto);
-            return error == null
-                ? ResponseEntity.noContent().build()
-                : ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(error));
+            StatusEnum result = menuService.addMenuType(menuTypeRequestDto);
+            return ResultHandler.setResult(result, HttpStatus.CONFLICT);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();
         }
     }
 
-    @GetMapping("getMenuType")
+    @GetMapping("/getMenuType")
     public ResponseEntity<? extends BasicResponse> getMenuType() {
         try {
-            List<MenuTypeEntity> result = menuService.getMenuType();
-            return result != null
-                ? ResponseEntity.ok(new CommonResponse<>(result))
-                : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            List<MenuTypeResponseDto> result
+                = MenuTypeResponseDto.listOf(menuService.getMenuType());
+            return ResultHandler.setResult(result, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();

@@ -1,11 +1,13 @@
 package com.lunchteam.lunchrestapi.api.repository;
 
+import com.lunchteam.lunchrestapi.api.dto.MenuRequestDto;
 import com.lunchteam.lunchrestapi.api.entity.MenuEntity;
 import com.lunchteam.lunchrestapi.api.entity.MenuTypeEntity;
 import com.lunchteam.lunchrestapi.api.entity.QMenuEntity;
 import com.lunchteam.lunchrestapi.api.entity.QMenuLogEntity;
 import com.lunchteam.lunchrestapi.api.entity.QMenuTypeEntity;
 import com.lunchteam.lunchrestapi.util.RandomUtil;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -80,11 +82,18 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
 
     @Transactional
     public long addVisitCountById(Long id) {
-        return queryFactory.update(qMenuEntity)
+        long result = queryFactory.update(qMenuEntity)
             .set(qMenuEntity.visitCount, qMenuEntity.visitCount.add(1))
             .set(qMenuEntity.recentVisit, LocalDateTime.now())
             .where(qMenuEntity.id.eq(id), qMenuEntity.useYn.eq("Y"))
             .execute();
+        if (result < 0) {
+            return queryFactory.insert(qMenuLogEntity)
+                .set(qMenuLogEntity.menuId, id)
+                .execute();
+        } else {
+            return result;
+        }
     }
 
     @Transactional
@@ -100,4 +109,20 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
             .where(qMenuTypeEntity.useYn.eq("Y"))
             .fetch();
     }
+
+    public List<MenuEntity> getVisitMenuList(MenuRequestDto menuRequestDto) {
+        return queryFactory.select(
+                Projections.fields(
+                    MenuEntity.class,
+                    qMenuLogEntity.id,
+                    qMenuEntity.name,
+                    qMenuEntity.visitCount,
+                    qMenuLogEntity.insertDateTime))
+            .from(qMenuEntity)
+            .join(qMenuLogEntity)
+            .on(qMenuLogEntity.menuId.eq(qMenuEntity.id))
+            .orderBy(qMenuLogEntity.insertDateTime.asc())
+            .fetch();
+    }
+
 }

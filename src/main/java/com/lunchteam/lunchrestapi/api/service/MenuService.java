@@ -1,5 +1,6 @@
 package com.lunchteam.lunchrestapi.api.service;
 
+import com.lunchteam.lunchrestapi.api.dto.DtoEnum;
 import com.lunchteam.lunchrestapi.api.dto.MenuModifyRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.MenuRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.MenuResponseDto;
@@ -7,9 +8,11 @@ import com.lunchteam.lunchrestapi.api.dto.MenuTypeRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.MenuTypeResponseDto;
 import com.lunchteam.lunchrestapi.api.entity.MenuEntity;
 import com.lunchteam.lunchrestapi.api.entity.MenuTypeEntity;
+import com.lunchteam.lunchrestapi.api.repository.MenuLogRepository;
 import com.lunchteam.lunchrestapi.api.repository.MenuRepository;
 import com.lunchteam.lunchrestapi.api.repository.MenuRepositorySupport;
 import com.lunchteam.lunchrestapi.api.repository.MenuTypeRepository;
+import com.lunchteam.lunchrestapi.api.response.StatusEnum;
 import java.util.List;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -23,19 +26,20 @@ public class MenuService {
 
     private final MenuRepository menuRepository;
     private final MenuTypeRepository menuTypeRepository;
+    private final MenuLogRepository menuLogRepository;
     private final MenuRepositorySupport menuRepositorySupport;
 
     @Transactional
-    public String addMenu(MenuRequestDto menuRequestDto) {
+    public StatusEnum addMenu(MenuRequestDto menuRequestDto) {
         if (menuRepository.existsByNameAndLocation(
             menuRequestDto.getName(),
             menuRequestDto.getLocation()
         )) {
-            return "exist_menu";
+            return StatusEnum.EXISTS_MENU;
         }
         MenuEntity menu = menuRequestDto.toMenu();
         MenuResponseDto.of(menuRepository.save(menu));
-        return null;
+        return StatusEnum.SUCCESS;
     }
 
     @Transactional
@@ -49,9 +53,9 @@ public class MenuService {
     }
 
     @Transactional
-    public String modifyMenu(MenuModifyRequestDto menuModifyRequestDto) {
+    public StatusEnum modifyMenu(MenuModifyRequestDto menuModifyRequestDto) {
         if (!menuRepository.existsByIdAndUseYn(menuModifyRequestDto.getId(), "Y")) {
-            return "no_menu";
+            return StatusEnum.NO_MENU;
         }
         MenuEntity menu = MenuEntity.ModifyMenu()
             .id(menuModifyRequestDto.getId())
@@ -61,41 +65,52 @@ public class MenuService {
             .build();
         long result = menuRepositorySupport.modifyMenuById(menu);
         log.info("modifyMenuById result: " + result);
-        return result > 0 ? null : "no_menu";
+        return result > 0 ? StatusEnum.SUCCESS : StatusEnum.NO_MENU;
     }
 
     @Transactional
-    public String deleteMenu(Long id) {
+    public StatusEnum deleteMenu(Long id) {
         if (!menuRepository.existsByIdAndUseYn(id, "Y")) {
-            return "no_menu";
+            return StatusEnum.NO_MENU;
         }
         long result = menuRepositorySupport.deleteMenuById(id);
         log.info("deleteMenuById result: " + result);
-        return result > 0 ? null : "no_menu";
+        return result > 0 ? StatusEnum.SUCCESS : StatusEnum.NO_MENU;
     }
 
+    @Transactional
     public MenuEntity visitMenu(MenuModifyRequestDto menuModifyRequestDto) {
         if (!menuRepository.existsByIdAndUseYn(menuModifyRequestDto.getId(), "Y")) {
             return null;
         }
-        long result = menuRepositorySupport.addVisitCountById(menuModifyRequestDto.getId());
-        log.info("visit menu result: " + result);
-        if (result > 0) {
+        long updateResult = menuRepositorySupport.addVisitCountById(menuModifyRequestDto.getId());
+        log.info("visit menu result: " + updateResult);
+        if (updateResult > 0) {
+            menuLogRepository.save(menuModifyRequestDto.toMenuLog());
             return menuRepository.findById(menuModifyRequestDto.getId()).orElse(null);
         } else {
             return null;
         }
     }
 
-    public String addMenuType(MenuTypeRequestDto menuTypeRequestDto) {
+    @Transactional
+    public StatusEnum addMenuType(MenuTypeRequestDto menuTypeRequestDto) {
         if (menuRepositorySupport.existsByMenuType(menuTypeRequestDto.getMenuType())) {
-            return "exists_menu_type";
+            return StatusEnum.EXISTS_MENU_TYPE;
         }
         MenuTypeResponseDto.of(menuTypeRepository.save(menuTypeRequestDto.toMenuTypeEntity()));
-        return null;
+        return StatusEnum.SUCCESS;
     }
 
     public List<MenuTypeEntity> getMenuType() {
         return menuRepositorySupport.getMenuType();
+    }
+
+    public List<MenuEntity> getVisitMenuList(MenuRequestDto menuRequestDto) {
+        if (menuRequestDto.getOrder() == DtoEnum.ASC) {
+            log.info("order: " + menuRequestDto.getOrder());
+        }
+        return menuRepositorySupport.getVisitMenuList(menuRequestDto);
+//        return null;
     }
 }

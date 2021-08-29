@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class MemberResponseDto {
+public class MemberResponseDto extends BasicResponseDto {
 
     private String email;
     private String name;

@@ -58,6 +58,7 @@ public class MenuEntity {
         this.name = name;
         this.location = location;
         this.menuType = menuType;
+        this.useYn = "Y";
     }
 
     @Builder(builderClassName = "ModifyMenu", builderMethodName = "ModifyMenu")
