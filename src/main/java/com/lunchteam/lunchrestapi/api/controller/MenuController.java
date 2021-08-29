@@ -11,6 +11,10 @@ import com.lunchteam.lunchrestapi.api.response.StatusEnum;
 import com.lunchteam.lunchrestapi.api.service.MenuService;
 import com.lunchteam.lunchrestapi.handler.ErrorHandler;
 import com.lunchteam.lunchrestapi.handler.ResultHandler;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,8 +36,21 @@ public class MenuController {
 
     private final MenuService menuService;
 
+    @Operation(summary = "Add Menu", description = "메뉴 추가")
+    @ApiResponses({
+        @ApiResponse(responseCode = "204", description = "Add Success"),
+        @ApiResponse(responseCode = "400", description = "Wrong Request"),
+        @ApiResponse(responseCode = "409", description = "Conflict Menu"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
+    })
     @PostMapping("/addMenu")
     public ResponseEntity<? extends BasicResponse> addMenu(
+        @Parameter(description = "Menu info", required = true, example = "{\n"
+            + "  \"location\": \"test l123o1c\",\n"
+            + "  \"menuType\": \"korean\",\n"
+            + "  \"name\": \"test ob11111j\"\n"
+            + "}"
+        )
         @Valid @RequestBody MenuRequestDto menuRequestDto, Errors errors) {
 
         try {
