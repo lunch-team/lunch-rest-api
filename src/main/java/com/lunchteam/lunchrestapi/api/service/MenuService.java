@@ -7,6 +7,7 @@ import com.lunchteam.lunchrestapi.api.dto.MenuResponseDto;
 import com.lunchteam.lunchrestapi.api.dto.MenuTypeRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.MenuTypeResponseDto;
 import com.lunchteam.lunchrestapi.api.entity.MenuEntity;
+import com.lunchteam.lunchrestapi.api.entity.MenuLogEntity;
 import com.lunchteam.lunchrestapi.api.entity.MenuTypeEntity;
 import com.lunchteam.lunchrestapi.api.repository.MenuLogRepository;
 import com.lunchteam.lunchrestapi.api.repository.MenuRepository;
@@ -86,8 +87,8 @@ public class MenuService {
         long updateResult = menuRepositorySupport.addVisitCountById(menuModifyRequestDto.getId());
         log.info("visit menu result: " + updateResult);
         if (updateResult > 0) {
-            menuLogRepository.save(menuModifyRequestDto.toMenuLog());
-            return menuRepository.findById(menuModifyRequestDto.getId()).orElse(null);
+            MenuLogEntity result = menuLogRepository.save(menuModifyRequestDto.toMenuLog());
+            return menuRepository.findById(result.getMenuId()).orElse(null);
         } else {
             return null;
         }
@@ -102,15 +103,16 @@ public class MenuService {
         return StatusEnum.SUCCESS;
     }
 
+    @Transactional
     public List<MenuTypeEntity> getMenuType() {
         return menuRepositorySupport.getMenuType();
     }
 
+    @Transactional
     public List<MenuEntity> getVisitMenuList(MenuRequestDto menuRequestDto) {
         if (menuRequestDto.getOrder() == DtoEnum.ASC) {
             log.info("order: " + menuRequestDto.getOrder());
         }
         return menuRepositorySupport.getVisitMenuList(menuRequestDto);
-//        return null;
     }
 }

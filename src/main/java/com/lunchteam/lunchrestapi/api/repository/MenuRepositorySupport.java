@@ -110,6 +110,7 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
             .fetch();
     }
 
+    @Transactional
     public List<MenuEntity> getVisitMenuList(MenuRequestDto menuRequestDto) {
         return queryFactory.select(
                 Projections.fields(
