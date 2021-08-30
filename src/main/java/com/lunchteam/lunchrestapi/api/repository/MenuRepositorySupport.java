@@ -1,5 +1,6 @@
 package com.lunchteam.lunchrestapi.api.repository;
 
+import com.lunchteam.lunchrestapi.api.dto.DtoEnum;
 import com.lunchteam.lunchrestapi.api.dto.MenuRequestDto;
 import com.lunchteam.lunchrestapi.api.entity.MenuEntity;
 import com.lunchteam.lunchrestapi.api.entity.MenuTypeEntity;
@@ -8,6 +9,7 @@ import com.lunchteam.lunchrestapi.api.entity.QMenuLogEntity;
 import com.lunchteam.lunchrestapi.api.entity.QMenuTypeEntity;
 import com.lunchteam.lunchrestapi.util.RandomUtil;
 import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -112,19 +114,37 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
 
     @Transactional
     public List<MenuEntity> getVisitMenuList(MenuRequestDto menuRequestDto) {
-        return queryFactory.select(
-                Projections.fields(
-                    MenuEntity.class,
-                    qMenuLogEntity.id,
-                    qMenuEntity.location,
-                    qMenuEntity.name,
-                    qMenuEntity.visitCount,
-                    qMenuLogEntity.insertDateTime))
+        JPAQuery<MenuEntity> query = queryFactory.select(Projections.fields(
+                MenuEntity.class,
+                qMenuLogEntity.id,
+                qMenuEntity.location,
+                qMenuEntity.name,
+                qMenuEntity.visitCount,
+                qMenuEntity.menuType,
+                qMenuLogEntity.insertDateTime))
             .from(qMenuEntity)
             .join(qMenuLogEntity)
-            .on(qMenuLogEntity.menuId.eq(qMenuEntity.id))
-            .orderBy(qMenuLogEntity.insertDateTime.asc())
-            .fetch();
+            .on(qMenuLogEntity.menuId.eq(qMenuEntity.id));
+        if (menuRequestDto.getOrder() == DtoEnum.DESC) {
+            query.orderBy(qMenuLogEntity.insertDateTime.desc());
+        } else {
+            query.orderBy(qMenuLogEntity.insertDateTime.asc());
+        }
+
+        return query.fetch();
+//            queryFactory.select(
+//                Projections.fields(
+//                    MenuEntity.class,
+//                    qMenuLogEntity.id,
+//                    qMenuEntity.location,
+//                    qMenuEntity.name,
+//                    qMenuEntity.visitCount,
+//                    qMenuLogEntity.insertDateTime))
+//            .from(qMenuEntity)
+//            .join(qMenuLogEntity)
+//            .on(qMenuLogEntity.menuId.eq(qMenuEntity.id))
+//            .orderBy(qMenuLogEntity.insertDateTime.asc())
+//            .fetch();
     }
 
 }

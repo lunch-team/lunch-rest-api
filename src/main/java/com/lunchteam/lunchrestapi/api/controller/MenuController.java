@@ -1,5 +1,6 @@
 package com.lunchteam.lunchrestapi.api.controller;
 
+import com.lunchteam.lunchrestapi.api.dto.MenuLogResponseDto;
 import com.lunchteam.lunchrestapi.api.dto.MenuModifyRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.MenuRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.MenuResponseDto;
@@ -184,8 +185,8 @@ public class MenuController {
         @RequestBody MenuRequestDto menuRequestDto
     ) {
         try {
-            List<MenuResponseDto> result
-                = MenuResponseDto.listOf(menuService.getVisitMenuList(menuRequestDto));
+            List<MenuLogResponseDto> result
+                = MenuLogResponseDto.listOf(menuService.getVisitMenuList(menuRequestDto));
             return ResultHandler.setResult(result, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             e.printStackTrace();
