@@ -11,10 +11,6 @@ import com.lunchteam.lunchrestapi.api.response.StatusEnum;
 import com.lunchteam.lunchrestapi.api.service.MenuService;
 import com.lunchteam.lunchrestapi.handler.ErrorHandler;
 import com.lunchteam.lunchrestapi.handler.ResultHandler;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -36,21 +32,15 @@ public class MenuController {
 
     private final MenuService menuService;
 
-    @Operation(summary = "Add Menu", description = "메뉴 추가")
-    @ApiResponses({
-        @ApiResponse(responseCode = "204", description = "Add Success"),
-        @ApiResponse(responseCode = "400", description = "Wrong Request"),
-        @ApiResponse(responseCode = "409", description = "Conflict Menu"),
-        @ApiResponse(responseCode = "500", description = "Internal Server Error")
-    })
+    /**
+     * 메뉴 추가
+     *
+     * @param menuRequestDto location, name, menuType
+     * @param errors         Valid
+     * @return 204
+     */
     @PostMapping("/addMenu")
     public ResponseEntity<? extends BasicResponse> addMenu(
-        @Parameter(description = "Menu info", required = true, example = "{\n"
-            + "  \"location\": \"test l123o1c\",\n"
-            + "  \"menuType\": \"korean\",\n"
-            + "  \"name\": \"test ob11111j\"\n"
-            + "}"
-        )
         @Valid @RequestBody MenuRequestDto menuRequestDto, Errors errors) {
 
         try {
@@ -68,6 +58,12 @@ public class MenuController {
         }
     }
 
+    /**
+     * 랜덤 메뉴 가져오기
+     *
+     * @param menuRequestDto randomNumber
+     * @return List
+     */
     @PostMapping("/getRandomMenu")
     public ResponseEntity<? extends BasicResponse> getRandomMenu(
         @RequestBody MenuRequestDto menuRequestDto
@@ -84,6 +80,11 @@ public class MenuController {
 
     }
 
+    /**
+     * 모든 메뉴 가져오기
+     *
+     * @return List
+     */
     @GetMapping("/getAllMenu")
     public ResponseEntity<? extends BasicResponse> getAllMenu() {
         try {
@@ -96,6 +97,13 @@ public class MenuController {
         }
     }
 
+    /**
+     * 메뉴 수정
+     *
+     * @param menuModifyRequestDto id, name, location, menuType
+     * @param errors               Valid
+     * @return 204
+     */
     @PostMapping("/modifyMenu")
     public ResponseEntity<? extends BasicResponse> modifyMenu(
         @Valid @RequestBody MenuModifyRequestDto menuModifyRequestDto,
@@ -117,6 +125,12 @@ public class MenuController {
         }
     }
 
+    /**
+     * 메뉴 삭제
+     *
+     * @param menuModifyRequestDto id
+     * @return 204
+     */
     @PostMapping("/deleteMenu")
     public ResponseEntity<? extends BasicResponse> deleteMenu(
         @RequestBody MenuModifyRequestDto menuModifyRequestDto) {
@@ -135,6 +149,12 @@ public class MenuController {
         }
     }
 
+    /**
+     * 메뉴 방문 추가
+     *
+     * @param menuModifyRequestDto id
+     * @return Menu
+     */
     @PostMapping("/visitMenu")
     public ResponseEntity<? extends BasicResponse> visitMenu(
         @RequestBody MenuModifyRequestDto menuModifyRequestDto) {
@@ -153,6 +173,12 @@ public class MenuController {
         }
     }
 
+    /**
+     * 방문한 메뉴 리스트 가져오기
+     *
+     * @param menuRequestDto order(ASC, DESC)
+     * @return List
+     */
     @PostMapping("/getVisitMenuList")
     public ResponseEntity<? extends BasicResponse> getVisitMenuList(
         @RequestBody MenuRequestDto menuRequestDto
@@ -167,6 +193,12 @@ public class MenuController {
         }
     }
 
+    /**
+     * 메뉴 타입 추가
+     *
+     * @param menuTypeRequestDto menuName, menuType
+     * @return 204
+     */
     @PostMapping("/addMenuType")
     public ResponseEntity<? extends BasicResponse> addMenuType(
         @RequestBody MenuTypeRequestDto menuTypeRequestDto
@@ -180,6 +212,11 @@ public class MenuController {
         }
     }
 
+    /**
+     * 메뉴 타입 가져오기
+     *
+     * @return List
+     */
     @GetMapping("/getMenuType")
     public ResponseEntity<? extends BasicResponse> getMenuType() {
         try {
