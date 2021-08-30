@@ -132,19 +132,6 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
         }
 
         return query.fetch();
-//            queryFactory.select(
-//                Projections.fields(
-//                    MenuEntity.class,
-//                    qMenuLogEntity.id,
-//                    qMenuEntity.location,
-//                    qMenuEntity.name,
-//                    qMenuEntity.visitCount,
-//                    qMenuLogEntity.insertDateTime))
-//            .from(qMenuEntity)
-//            .join(qMenuLogEntity)
-//            .on(qMenuLogEntity.menuId.eq(qMenuEntity.id))
-//            .orderBy(qMenuLogEntity.insertDateTime.asc())
-//            .fetch();
     }
 
 }
