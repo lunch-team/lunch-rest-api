@@ -116,6 +116,7 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
                 Projections.fields(
                     MenuEntity.class,
                     qMenuLogEntity.id,
+                    qMenuEntity.location,
                     qMenuEntity.name,
                     qMenuEntity.visitCount,
                     qMenuLogEntity.insertDateTime))
