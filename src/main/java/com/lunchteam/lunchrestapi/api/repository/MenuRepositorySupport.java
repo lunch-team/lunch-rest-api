@@ -134,4 +134,10 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
         return query.fetch();
     }
 
+    @Transactional
+    public long deleteMenuLogById(Long id) {
+        return queryFactory.delete(qMenuLogEntity)
+            .where(qMenuLogEntity.id.eq(id))
+            .execute();
+    }
 }

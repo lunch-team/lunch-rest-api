@@ -115,4 +115,14 @@ public class MenuService {
         }
         return menuRepositorySupport.getVisitMenuList(menuRequestDto);
     }
+
+    @Transactional
+    public StatusEnum deleteMenuLog(Long id) {
+        if (!menuLogRepository.existsById(id)) {
+            return StatusEnum.NO_MENU;
+        }
+        long result = menuRepositorySupport.deleteMenuLogById(id);
+        log.info("deleteMenuLogById result: " + result);
+        return result > 0 ? StatusEnum.SUCCESS : StatusEnum.NO_MENU;
+    }
 }

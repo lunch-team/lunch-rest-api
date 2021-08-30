@@ -230,4 +230,27 @@ public class MenuController {
         }
     }
 
+    /**
+     * 방문 로그 삭제
+     *
+     * @param menuModifyRequestDto id
+     * @return 204
+     */
+    @PostMapping("/deleteMenuLog")
+    public ResponseEntity<? extends BasicResponse> deleteMenuLog(
+        @RequestBody MenuModifyRequestDto menuModifyRequestDto
+    ) {
+        try {
+            if (menuModifyRequestDto.getId() == null) {
+                log.warn("No Id");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+
+            StatusEnum result = menuService.deleteMenuLog(menuModifyRequestDto.getId());
+            return ResultHandler.setResult(result, HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 }
