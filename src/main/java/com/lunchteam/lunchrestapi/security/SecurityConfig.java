@@ -24,15 +24,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     // swagger static resource 회피
-    @Override
-    public void configure(WebSecurity web) {
-        web.ignoring().antMatchers("/v3/api-docs",
-            "/configuration/ui",
-            "/swagger-resources/**",
-            "/configuration/security",
-            "/swagger-ui/**",
-            "/webjars/**");
-    }
+//    @Override
+//    public void configure(WebSecurity web) {
+//        web.ignoring().antMatchers("/v3/api-docs",
+//            "/configuration/ui",
+//            "/swagger-resources/**",
+//            "/configuration/security",
+//            "/swagger-ui/**",
+//            "/webjars/**");
+//    }
 
     /**
      * WebSecurityConfigurerAdapter 인터페이스의 구현체
