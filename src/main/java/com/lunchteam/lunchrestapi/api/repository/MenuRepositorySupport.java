@@ -1,17 +1,19 @@
 package com.lunchteam.lunchrestapi.api.repository;
 
 import com.lunchteam.lunchrestapi.api.dto.DtoEnum;
-import com.lunchteam.lunchrestapi.api.dto.MenuRequestDto;
+import com.lunchteam.lunchrestapi.api.dto.menu.MenuRequestDto;
+import com.lunchteam.lunchrestapi.api.dto.menu.MenuResult;
 import com.lunchteam.lunchrestapi.api.entity.MenuEntity;
 import com.lunchteam.lunchrestapi.api.entity.MenuTypeEntity;
 import com.lunchteam.lunchrestapi.api.entity.QMenuEntity;
 import com.lunchteam.lunchrestapi.api.entity.QMenuLogEntity;
 import com.lunchteam.lunchrestapi.api.entity.QMenuTypeEntity;
 import com.lunchteam.lunchrestapi.util.RandomUtil;
+import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -36,14 +38,28 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
     }
 
     @Transactional
-    public List<MenuEntity> getRandomMenu(int count) {
+    public List<MenuResult> getRandomMenu(int count) {
         long totalCnt = queryFactory.selectFrom(qMenuEntity)
             .where(qMenuEntity.useYn.eq("Y")).fetchCount();
         log.debug("total count: " + totalCnt + ", random number: " + count);
         if (count < totalCnt || count > 0) {
-            List<MenuEntity> tmp = new ArrayList<>();
-            List<MenuEntity> list = queryFactory.selectFrom(qMenuEntity)
-                .where(qMenuEntity.useYn.eq("Y")).fetch();
+            List<MenuResult> tmp = new ArrayList<>();
+            List<MenuResult> list
+                = queryFactory
+                .select(
+                    Projections.fields(
+                        MenuResult.class,
+                        qMenuEntity.id,
+                        qMenuEntity.name,
+                        qMenuEntity.menuType,
+                        qMenuTypeEntity.menuName,
+                        qMenuEntity.location
+                    )
+                ).from(qMenuEntity)
+                .where(qMenuEntity.useYn.eq("Y"))
+                .join(qMenuTypeEntity)
+                .on(qMenuEntity.menuType.eq(qMenuTypeEntity.menuType))
+                .fetch();
 
             int[] randomInt = RandomUtil.getRandomNumberArray(0, (int) totalCnt - 1, count);
             log.debug(Arrays.toString(randomInt));
@@ -58,9 +74,35 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
     }
 
     @Transactional
-    public List<MenuEntity> getAllMenu() {
-        return queryFactory.selectFrom(qMenuEntity)
-            .where(qMenuEntity.useYn.eq("Y")).fetch();
+    public List<MenuResult> getAllMenu() {
+        return queryFactory
+            .select(
+                Projections.fields(
+                    MenuResult.class,
+                    qMenuEntity.id,
+                    qMenuEntity.location,
+                    qMenuEntity.name,
+                    qMenuEntity.menuType,
+                    qMenuTypeEntity.menuName,
+                    ExpressionUtils.as(
+                        JPAExpressions.select(qMenuLogEntity.insertDateTime.max())
+                            .from(qMenuLogEntity)
+                            .where(qMenuLogEntity.menuId.eq(qMenuEntity.id)
+                            ), "recentVisit"
+                    ),
+                    ExpressionUtils.as(
+                        JPAExpressions.select(qMenuLogEntity.id.count())
+                            .from(qMenuLogEntity)
+                            .where(qMenuLogEntity.menuId.eq(qMenuEntity.id)
+                            ), "visitCount"
+                    ),
+                    qMenuEntity.insertDateTime
+                )
+            ).from(qMenuEntity)
+            .where(qMenuEntity.useYn.eq("Y"))
+            .leftJoin(qMenuTypeEntity)
+            .on(qMenuEntity.menuType.eq(qMenuTypeEntity.menuType))
+            .fetch();
     }
 
     @Transactional
@@ -83,22 +125,6 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
     }
 
     @Transactional
-    public long addVisitCountById(Long id) {
-        long result = queryFactory.update(qMenuEntity)
-            .set(qMenuEntity.visitCount, qMenuEntity.visitCount.add(1))
-            .set(qMenuEntity.recentVisit, LocalDateTime.now())
-            .where(qMenuEntity.id.eq(id), qMenuEntity.useYn.eq("Y"))
-            .execute();
-        if (result < 0) {
-            return queryFactory.insert(qMenuLogEntity)
-                .set(qMenuLogEntity.menuId, id)
-                .execute();
-        } else {
-            return result;
-        }
-    }
-
-    @Transactional
     public boolean existsByMenuType(String menuType) {
         return queryFactory.selectFrom(qMenuTypeEntity)
             .where(qMenuTypeEntity.menuType.eq(menuType), qMenuTypeEntity.useYn.eq("Y"))
@@ -113,13 +139,12 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
     }
 
     @Transactional
-    public List<MenuEntity> getVisitMenuList(MenuRequestDto menuRequestDto) {
-        JPAQuery<MenuEntity> query = queryFactory.select(Projections.fields(
-                MenuEntity.class,
+    public List<MenuResult> getVisitMenuList(MenuRequestDto menuRequestDto) {
+        JPAQuery<MenuResult> query = queryFactory.select(Projections.fields(
+                MenuResult.class,
                 qMenuLogEntity.id,
                 qMenuEntity.location,
                 qMenuEntity.name,
-                qMenuEntity.visitCount,
                 qMenuEntity.menuType,
                 qMenuLogEntity.insertDateTime))
             .from(qMenuEntity)

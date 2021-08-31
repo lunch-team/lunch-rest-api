@@ -1,6 +1,6 @@
 package com.lunchteam.lunchrestapi.api.repository;
 
-import com.lunchteam.lunchrestapi.api.dto.MemberRequestDto;
+import com.lunchteam.lunchrestapi.api.dto.member.MemberRequestDto;
 import com.lunchteam.lunchrestapi.api.entity.MemberEntity;
 import com.lunchteam.lunchrestapi.api.entity.QMemberEntity;
 import com.querydsl.jpa.impl.JPAQueryFactory;

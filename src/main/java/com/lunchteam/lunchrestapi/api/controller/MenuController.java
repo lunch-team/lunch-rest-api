@@ -1,11 +1,11 @@
 package com.lunchteam.lunchrestapi.api.controller;
 
-import com.lunchteam.lunchrestapi.api.dto.MenuLogResponseDto;
-import com.lunchteam.lunchrestapi.api.dto.MenuModifyRequestDto;
-import com.lunchteam.lunchrestapi.api.dto.MenuRequestDto;
-import com.lunchteam.lunchrestapi.api.dto.MenuResponseDto;
-import com.lunchteam.lunchrestapi.api.dto.MenuTypeRequestDto;
-import com.lunchteam.lunchrestapi.api.dto.MenuTypeResponseDto;
+import com.lunchteam.lunchrestapi.api.dto.menu.MenuLogResponseDto;
+import com.lunchteam.lunchrestapi.api.dto.menu.MenuModifyRequestDto;
+import com.lunchteam.lunchrestapi.api.dto.menu.MenuRequestDto;
+import com.lunchteam.lunchrestapi.api.dto.menu.MenuResponseDto;
+import com.lunchteam.lunchrestapi.api.dto.menu.MenuTypeRequestDto;
+import com.lunchteam.lunchrestapi.api.dto.menu.MenuTypeResponseDto;
 import com.lunchteam.lunchrestapi.api.response.BasicResponse;
 import com.lunchteam.lunchrestapi.api.response.ErrorResponse;
 import com.lunchteam.lunchrestapi.api.response.StatusEnum;
@@ -71,7 +71,7 @@ public class MenuController {
     ) {
         try {
             List<MenuResponseDto> result
-                = MenuResponseDto.listOf(
+                = MenuResponseDto.listOfResult(
                 menuService.getRandomMenu(menuRequestDto.getRandomNumber()));
             return ResultHandler.setResult(result, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
@@ -90,7 +90,7 @@ public class MenuController {
     public ResponseEntity<? extends BasicResponse> getAllMenu() {
         try {
             List<MenuResponseDto> result =
-                MenuResponseDto.listOf(menuService.getAllMenu());
+                MenuResponseDto.listOfResult(menuService.getAllMenu());
             return ResultHandler.setResult(result, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             e.printStackTrace();
@@ -186,7 +186,7 @@ public class MenuController {
     ) {
         try {
             List<MenuLogResponseDto> result
-                = MenuLogResponseDto.listOf(menuService.getVisitMenuList(menuRequestDto));
+                = MenuLogResponseDto.listOfResult(menuService.getVisitMenuList(menuRequestDto));
             return ResultHandler.setResult(result, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             e.printStackTrace();

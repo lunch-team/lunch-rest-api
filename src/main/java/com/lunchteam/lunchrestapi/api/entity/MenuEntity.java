@@ -29,13 +29,7 @@ public class MenuEntity {
 
     private String name;
 
-    @Column(columnDefinition = "varchar(1) default 'Y'")
     private String useYn;
-
-    @ColumnDefault("0")
-    private int visitCount;
-
-    private LocalDateTime recentVisit;
 
     @CreationTimestamp
     private LocalDateTime insertDateTime;
@@ -73,16 +67,5 @@ public class MenuEntity {
         this.location = location;
         this.menuType = menuType;
         this.updateDateTime = LocalDateTime.now();
-    }
-
-    /**
-     * 최근 방문 시점 갱신
-     *
-     * @param id 메뉴 아이디
-     */
-    @Builder(builderClassName = "VisitStamp", builderMethodName = "VisitStamp")
-    public MenuEntity(Long id) {
-        this.id = id;
-        this.recentVisit = LocalDateTime.now();
     }
 }

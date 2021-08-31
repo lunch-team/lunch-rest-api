@@ -1,6 +1,6 @@
 package com.lunchteam.lunchrestapi.api.controller;
 
-import com.lunchteam.lunchrestapi.api.dto.MemberResponseDto;
+import com.lunchteam.lunchrestapi.api.dto.member.MemberResponseDto;
 import com.lunchteam.lunchrestapi.api.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

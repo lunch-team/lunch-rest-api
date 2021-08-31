@@ -1,7 +1,7 @@
 package com.lunchteam.lunchrestapi.api.controller;
 
-import com.lunchteam.lunchrestapi.api.dto.MemberRequestDto;
-import com.lunchteam.lunchrestapi.api.dto.MemberResponseDto;
+import com.lunchteam.lunchrestapi.api.dto.member.MemberRequestDto;
+import com.lunchteam.lunchrestapi.api.dto.member.MemberResponseDto;
 import com.lunchteam.lunchrestapi.api.response.BasicResponse;
 import com.lunchteam.lunchrestapi.api.response.CommonResponse;
 import com.lunchteam.lunchrestapi.api.response.ErrorResponse;

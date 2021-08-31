@@ -1,11 +1,12 @@
 package com.lunchteam.lunchrestapi.api.service;
 
 import com.lunchteam.lunchrestapi.api.dto.DtoEnum;
-import com.lunchteam.lunchrestapi.api.dto.MenuModifyRequestDto;
-import com.lunchteam.lunchrestapi.api.dto.MenuRequestDto;
-import com.lunchteam.lunchrestapi.api.dto.MenuResponseDto;
-import com.lunchteam.lunchrestapi.api.dto.MenuTypeRequestDto;
-import com.lunchteam.lunchrestapi.api.dto.MenuTypeResponseDto;
+import com.lunchteam.lunchrestapi.api.dto.menu.MenuModifyRequestDto;
+import com.lunchteam.lunchrestapi.api.dto.menu.MenuRequestDto;
+import com.lunchteam.lunchrestapi.api.dto.menu.MenuResponseDto;
+import com.lunchteam.lunchrestapi.api.dto.menu.MenuResult;
+import com.lunchteam.lunchrestapi.api.dto.menu.MenuTypeRequestDto;
+import com.lunchteam.lunchrestapi.api.dto.menu.MenuTypeResponseDto;
 import com.lunchteam.lunchrestapi.api.entity.MenuEntity;
 import com.lunchteam.lunchrestapi.api.entity.MenuLogEntity;
 import com.lunchteam.lunchrestapi.api.entity.MenuTypeEntity;
@@ -44,12 +45,12 @@ public class MenuService {
     }
 
     @Transactional
-    public List<MenuEntity> getRandomMenu(int count) {
+    public List<MenuResult> getRandomMenu(int count) {
         return menuRepositorySupport.getRandomMenu(count);
     }
 
     @Transactional
-    public List<MenuEntity> getAllMenu() {
+    public List<MenuResult> getAllMenu() {
         return menuRepositorySupport.getAllMenu();
     }
 
@@ -84,14 +85,8 @@ public class MenuService {
         if (!menuRepository.existsByIdAndUseYn(menuModifyRequestDto.getId(), "Y")) {
             return null;
         }
-        long updateResult = menuRepositorySupport.addVisitCountById(menuModifyRequestDto.getId());
-        log.info("visit menu result: " + updateResult);
-        if (updateResult > 0) {
-            MenuLogEntity result = menuLogRepository.save(menuModifyRequestDto.toMenuLog());
-            return menuRepository.findById(result.getMenuId()).orElse(null);
-        } else {
-            return null;
-        }
+        MenuLogEntity result = menuLogRepository.save(menuModifyRequestDto.toMenuLog());
+        return menuRepository.findById(result.getMenuId()).orElse(null);
     }
 
     @Transactional
@@ -109,7 +104,7 @@ public class MenuService {
     }
 
     @Transactional
-    public List<MenuEntity> getVisitMenuList(MenuRequestDto menuRequestDto) {
+    public List<MenuResult> getVisitMenuList(MenuRequestDto menuRequestDto) {
         if (menuRequestDto.getOrder() == DtoEnum.ASC) {
             log.info("order: " + menuRequestDto.getOrder());
         }

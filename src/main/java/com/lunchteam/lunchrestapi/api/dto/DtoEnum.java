@@ -4,7 +4,7 @@ public enum DtoEnum {
     ASC("asc"),
     DESC("desc");
 
-    private String value;
+    private final String value;
 
     DtoEnum(String value) {
         this.value = value;

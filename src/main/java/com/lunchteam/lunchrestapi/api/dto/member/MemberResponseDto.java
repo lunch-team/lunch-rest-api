@@ -1,5 +1,6 @@
-package com.lunchteam.lunchrestapi.api.dto;
+package com.lunchteam.lunchrestapi.api.dto.member;
 
+import com.lunchteam.lunchrestapi.api.dto.BasicResponseDto;
 import com.lunchteam.lunchrestapi.api.entity.MemberEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

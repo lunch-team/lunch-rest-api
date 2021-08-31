@@ -1,29 +1,31 @@
-package com.lunchteam.lunchrestapi.api.dto;
+package com.lunchteam.lunchrestapi.api.dto.menu;
 
 import com.lunchteam.lunchrestapi.api.entity.MenuEntity;
+import com.lunchteam.lunchrestapi.api.entity.MenuLogEntity;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class MenuRequestDto {
+public class MenuModifyRequestDto {
 
-    // 메뉴 id
+    @NotNull(message = "no_id")
     private Long id;
     // 정확한 주소
+    @NotBlank(message = "no_location")
     private String location;
     // 상호명
-    @NotBlank
+    @NotBlank(message = "no_name")
     private String name;
     // 메뉴
+    @NotBlank(message = "no_menuType")
     private String menuType;
-    // 랜덤으로 가져올 메뉴 개수
-    private int randomNumber;
-
-    private DtoEnum order;
 
     /**
      * 메뉴 추가
@@ -35,6 +37,12 @@ public class MenuRequestDto {
             .location(location)
             .name(name)
             .menuType(menuType)
+            .build();
+    }
+
+    public MenuLogEntity toMenuLog() {
+        return MenuLogEntity.AddMenuLog()
+            .menuId(id)
             .build();
     }
 }

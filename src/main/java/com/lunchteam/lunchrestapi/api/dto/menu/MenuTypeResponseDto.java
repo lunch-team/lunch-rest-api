@@ -1,5 +1,6 @@
-package com.lunchteam.lunchrestapi.api.dto;
+package com.lunchteam.lunchrestapi.api.dto.menu;
 
+import com.lunchteam.lunchrestapi.api.dto.BasicResponseDto;
 import com.lunchteam.lunchrestapi.api.entity.MenuTypeEntity;
 import java.util.ArrayList;
 import java.util.List;

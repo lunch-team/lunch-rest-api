@@ -1,4 +1,4 @@
-package com.lunchteam.lunchrestapi.api.dto;
+package com.lunchteam.lunchrestapi.api.dto.member;
 
 import com.lunchteam.lunchrestapi.api.entity.MemberEntity;
 import com.lunchteam.lunchrestapi.security.dto.Authority;

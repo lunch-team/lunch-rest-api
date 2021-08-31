@@ -1,7 +1,7 @@
 package com.lunchteam.lunchrestapi.api.service;
 
-import com.lunchteam.lunchrestapi.api.dto.MemberRequestDto;
-import com.lunchteam.lunchrestapi.api.dto.MemberResponseDto;
+import com.lunchteam.lunchrestapi.api.dto.member.MemberRequestDto;
+import com.lunchteam.lunchrestapi.api.dto.member.MemberResponseDto;
 import com.lunchteam.lunchrestapi.api.entity.MemberEntity;
 import com.lunchteam.lunchrestapi.api.repository.MemberRepository;
 import com.lunchteam.lunchrestapi.api.repository.RefreshTokenRepository;

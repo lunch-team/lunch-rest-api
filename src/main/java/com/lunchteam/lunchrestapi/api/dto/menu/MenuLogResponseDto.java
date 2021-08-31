@@ -1,5 +1,6 @@
-package com.lunchteam.lunchrestapi.api.dto;
+package com.lunchteam.lunchrestapi.api.dto.menu;
 
+import com.lunchteam.lunchrestapi.api.dto.BasicResponseDto;
 import com.lunchteam.lunchrestapi.api.entity.MenuEntity;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -35,6 +36,28 @@ public class MenuLogResponseDto extends BasicResponseDto {
         } else {
             List<MenuLogResponseDto> result = new ArrayList<>();
             for (MenuEntity menu : menus) {
+                result.add(MenuLogResponseDto.of(menu));
+            }
+            return result;
+        }
+    }
+
+    public static MenuLogResponseDto of(MenuResult menu) {
+        return new MenuLogResponseDto(
+            menu.getId(),
+            menu.getLocation(),
+            menu.getName(),
+            menu.getMenuType(),
+            menu.getInsertDateTime()
+        );
+    }
+
+    public static List<MenuLogResponseDto> listOfResult(List<MenuResult> menus) {
+        if (menus.isEmpty()) {
+            return null;
+        } else {
+            List<MenuLogResponseDto> result = new ArrayList<>();
+            for (MenuResult menu : menus) {
                 result.add(MenuLogResponseDto.of(menu));
             }
             return result;
