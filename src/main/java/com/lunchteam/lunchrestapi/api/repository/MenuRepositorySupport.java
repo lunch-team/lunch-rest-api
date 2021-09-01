@@ -55,12 +55,24 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
                         qMenuEntity.location
                     )
                 ).from(qMenuEntity)
-                .where(qMenuEntity.useYn.eq("Y"))
+                .where(
+                    qMenuEntity.useYn.eq("Y")
+                        .and(
+                            qMenuEntity.id.notIn(
+                                JPAExpressions
+                                    .select(qMenuLogEntity.menuId)
+                                    .from(qMenuLogEntity)
+                                    .orderBy(qMenuLogEntity.insertDateTime.desc())
+                                    .limit(5)
+
+                            )
+                        )
+                )
                 .join(qMenuTypeEntity)
                 .on(qMenuEntity.menuType.eq(qMenuTypeEntity.menuType))
                 .fetch();
 
-            int[] randomInt = RandomUtil.getRandomNumberArray(0, (int) totalCnt - 1, count);
+            int[] randomInt = RandomUtil.getRandomNumberArray(0, list.size() - 1, count);
             log.debug(Arrays.toString(randomInt));
             for (int i = 0; i < count; i++) {
                 log.debug(String.valueOf(list.get(randomInt[i])));
