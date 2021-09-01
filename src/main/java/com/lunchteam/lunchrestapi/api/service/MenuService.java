@@ -6,10 +6,8 @@ import com.lunchteam.lunchrestapi.api.dto.menu.MenuRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuResponseDto;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuResult;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuTypeRequestDto;
-import com.lunchteam.lunchrestapi.api.dto.menu.MenuTypeResponseDto;
 import com.lunchteam.lunchrestapi.api.entity.MenuEntity;
 import com.lunchteam.lunchrestapi.api.entity.MenuLogEntity;
-import com.lunchteam.lunchrestapi.api.entity.MenuTypeEntity;
 import com.lunchteam.lunchrestapi.api.repository.MenuLogRepository;
 import com.lunchteam.lunchrestapi.api.repository.MenuRepository;
 import com.lunchteam.lunchrestapi.api.repository.MenuRepositorySupport;
@@ -40,7 +38,7 @@ public class MenuService {
             return StatusEnum.EXISTS_MENU;
         }
         MenuEntity menu = menuRequestDto.toMenu();
-        MenuResponseDto.of(menuRepository.save(menu));
+        MenuResponseDto.ofMenuEntity(menuRepository.save(menu));
         return StatusEnum.SUCCESS;
     }
 
@@ -94,12 +92,12 @@ public class MenuService {
         if (menuRepositorySupport.existsByMenuType(menuTypeRequestDto.getMenuType())) {
             return StatusEnum.EXISTS_MENU_TYPE;
         }
-        MenuTypeResponseDto.of(menuTypeRepository.save(menuTypeRequestDto.toMenuTypeEntity()));
+        menuTypeRepository.save(menuTypeRequestDto.toMenuTypeEntity());
         return StatusEnum.SUCCESS;
     }
 
     @Transactional
-    public List<MenuTypeEntity> getMenuType() {
+    public List<MenuResult> getMenuType() {
         return menuRepositorySupport.getMenuType();
     }
 

@@ -11,6 +11,7 @@ public class MenuResult {
     private Long id;
     private String location;
     private String name;
+    private String menuId;
     private String menuType;
     private String menuName;
     private Long visitCount;

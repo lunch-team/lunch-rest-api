@@ -1,11 +1,9 @@
 package com.lunchteam.lunchrestapi.api.controller;
 
-import com.lunchteam.lunchrestapi.api.dto.menu.MenuLogResponseDto;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuModifyRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuResponseDto;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuTypeRequestDto;
-import com.lunchteam.lunchrestapi.api.dto.menu.MenuTypeResponseDto;
 import com.lunchteam.lunchrestapi.api.response.BasicResponse;
 import com.lunchteam.lunchrestapi.api.response.ErrorResponse;
 import com.lunchteam.lunchrestapi.api.response.StatusEnum;
@@ -71,7 +69,7 @@ public class MenuController {
     ) {
         try {
             List<MenuResponseDto> result
-                = MenuResponseDto.listOfResult(
+                = MenuResponseDto.listOfMenuResult(
                 menuService.getRandomMenu(menuRequestDto.getRandomNumber()));
             return ResultHandler.setResult(result, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
@@ -90,7 +88,7 @@ public class MenuController {
     public ResponseEntity<? extends BasicResponse> getAllMenu() {
         try {
             List<MenuResponseDto> result =
-                MenuResponseDto.listOfResult(menuService.getAllMenu());
+                MenuResponseDto.listOfMenuResult(menuService.getAllMenu());
             return ResultHandler.setResult(result, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             e.printStackTrace();
@@ -165,7 +163,7 @@ public class MenuController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
             return ResultHandler.setResult(
-                MenuResponseDto.of(menuService.visitMenu(menuModifyRequestDto)),
+                MenuResponseDto.ofMenuEntity(menuService.visitMenu(menuModifyRequestDto)),
                 HttpStatus.NOT_FOUND
             );
         } catch (Exception e) {
@@ -185,8 +183,8 @@ public class MenuController {
         @RequestBody MenuRequestDto menuRequestDto
     ) {
         try {
-            List<MenuLogResponseDto> result
-                = MenuLogResponseDto.listOfResult(menuService.getVisitMenuList(menuRequestDto));
+            List<MenuResponseDto> result
+                = MenuResponseDto.listOfLogResult(menuService.getVisitMenuList(menuRequestDto));
             return ResultHandler.setResult(result, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             e.printStackTrace();
@@ -221,8 +219,8 @@ public class MenuController {
     @GetMapping("/getMenuType")
     public ResponseEntity<? extends BasicResponse> getMenuType() {
         try {
-            List<MenuTypeResponseDto> result
-                = MenuTypeResponseDto.listOf(menuService.getMenuType());
+            List<MenuResponseDto> result
+                = MenuResponseDto.listOfMenuTypeResult(menuService.getMenuType());
             return ResultHandler.setResult(result, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             e.printStackTrace();

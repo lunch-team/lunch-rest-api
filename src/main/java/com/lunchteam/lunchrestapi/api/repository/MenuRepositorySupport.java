@@ -4,7 +4,6 @@ import com.lunchteam.lunchrestapi.api.dto.DtoEnum;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuResult;
 import com.lunchteam.lunchrestapi.api.entity.MenuEntity;
-import com.lunchteam.lunchrestapi.api.entity.MenuTypeEntity;
 import com.lunchteam.lunchrestapi.api.entity.QMenuEntity;
 import com.lunchteam.lunchrestapi.api.entity.QMenuLogEntity;
 import com.lunchteam.lunchrestapi.api.entity.QMenuTypeEntity;
@@ -132,8 +131,11 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
     }
 
     @Transactional
-    public List<MenuTypeEntity> getMenuType() {
-        return queryFactory.selectFrom(qMenuTypeEntity)
+    public List<MenuResult> getMenuType() {
+        return queryFactory.select(Projections.fields(MenuResult.class,
+                qMenuTypeEntity.id,
+                qMenuTypeEntity.menuName,
+                qMenuTypeEntity.menuType))
             .where(qMenuTypeEntity.useYn.eq("Y"))
             .fetch();
     }
@@ -146,10 +148,13 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
                 qMenuEntity.location,
                 qMenuEntity.name,
                 qMenuEntity.menuType,
+                qMenuTypeEntity.menuName,
                 qMenuLogEntity.insertDateTime))
             .from(qMenuEntity)
             .join(qMenuLogEntity)
-            .on(qMenuLogEntity.menuId.eq(qMenuEntity.id));
+            .on(qMenuLogEntity.menuId.eq(qMenuEntity.id))
+            .join(qMenuTypeEntity)
+            .on(qMenuEntity.menuType.eq(qMenuTypeEntity.menuType));
         if (menuRequestDto.getOrder() == DtoEnum.DESC) {
             query.orderBy(qMenuLogEntity.insertDateTime.desc());
         } else {

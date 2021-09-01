@@ -22,28 +22,9 @@ public class MenuResponseDto extends BasicResponseDto {
     private String menuType;
     private String menuName;
     private LocalDateTime recentVisit;
+    private LocalDateTime insertDateTime;
 
-    public static MenuResponseDto of(MenuEntity menu) {
-        return MenuResponseDto.builder()
-            .id(menu.getId())
-            .name(menu.getName())
-            .menuType(menu.getMenuType())
-            .build();
-    }
-
-    public static List<MenuResponseDto> listOf(List<MenuEntity> menus) {
-        if (menus.isEmpty()) {
-            return null;
-        } else {
-            List<MenuResponseDto> result = new ArrayList<>();
-            for (MenuEntity menu : menus) {
-                result.add(MenuResponseDto.of(menu));
-            }
-            return result;
-        }
-    }
-
-    public static MenuResponseDto of(MenuResult menu) {
+    private static MenuResponseDto of(MenuResult menu) {
         return MenuResponseDto.builder()
             .id(menu.getId())
             .location(menu.getLocation())
@@ -54,7 +35,40 @@ public class MenuResponseDto extends BasicResponseDto {
             .build();
     }
 
-    public static List<MenuResponseDto> listOfResult(List<MenuResult> menus) {
+    private static MenuResponseDto ofMenuLog(MenuResult menu) {
+        return MenuResponseDto.builder()
+            .id(menu.getId())
+            .location(menu.getLocation())
+            .name(menu.getName())
+            .menuType(menu.getMenuType())
+            .menuName(menu.getMenuName())
+            .insertDateTime(menu.getInsertDateTime())
+            .build();
+    }
+
+    private static MenuResponseDto ofMenuType(MenuResult menu) {
+        return MenuResponseDto.builder()
+            .id(menu.getId())
+            .menuName(menu.getMenuName())
+            .menuType(menu.getMenuType())
+            .build();
+    }
+
+    /**
+     * JPA Repository 를 위한 MenuEntity to ResponseDto
+     *
+     * @param menu MenuEntity
+     * @return id, name, menuType
+     */
+    public static MenuResponseDto ofMenuEntity(MenuEntity menu) {
+        return MenuResponseDto.builder()
+            .id(menu.getId())
+            .name(menu.getName())
+            .menuType(menu.getMenuType())
+            .build();
+    }
+
+    public static List<MenuResponseDto> listOfMenuResult(List<MenuResult> menus) {
         if (menus.isEmpty()) {
             return null;
         } else {
@@ -65,4 +79,31 @@ public class MenuResponseDto extends BasicResponseDto {
             return result;
         }
     }
+
+    public static List<MenuResponseDto> listOfMenuTypeResult(List<MenuResult> menus) {
+        if (!menus.isEmpty()) {
+            List<MenuResponseDto> result = new ArrayList<>();
+
+            for (MenuResult entity : menus) {
+                result.add(MenuResponseDto.ofMenuType(entity));
+            }
+
+            return result;
+        } else {
+            return null;
+        }
+    }
+
+    public static List<MenuResponseDto> listOfLogResult(List<MenuResult> menus) {
+        if (menus.isEmpty()) {
+            return null;
+        } else {
+            List<MenuResponseDto> result = new ArrayList<>();
+            for (MenuResult menu : menus) {
+                result.add(MenuResponseDto.ofMenuLog(menu));
+            }
+            return result;
+        }
+    }
+
 }
