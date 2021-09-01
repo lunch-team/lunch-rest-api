@@ -136,6 +136,7 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
                 qMenuTypeEntity.id,
                 qMenuTypeEntity.menuName,
                 qMenuTypeEntity.menuType))
+            .from(qMenuTypeEntity)
             .where(qMenuTypeEntity.useYn.eq("Y"))
             .fetch();
     }
