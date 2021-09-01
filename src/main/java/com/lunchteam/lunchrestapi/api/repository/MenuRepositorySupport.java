@@ -38,13 +38,14 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
 
     @Transactional
     public List<MenuResult> getRandomMenu(int count) {
+        final int EXCEPT_NUM = 5;
         long totalCnt = queryFactory.selectFrom(qMenuEntity)
             .where(qMenuEntity.useYn.eq("Y")).fetchCount();
         log.debug("total count: " + totalCnt + ", random number: " + count);
         if (count < totalCnt || count > 0) {
             List<MenuResult> tmp = new ArrayList<>();
-            List<MenuResult> list
-                = queryFactory
+
+            JPAQuery<MenuResult> query = queryFactory
                 .select(
                     Projections.fields(
                         MenuResult.class,
@@ -57,20 +58,26 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
                 ).from(qMenuEntity)
                 .where(
                     qMenuEntity.useYn.eq("Y")
-                        .and(
-                            qMenuEntity.id.notIn(
-                                JPAExpressions
-                                    .select(qMenuLogEntity.menuId)
-                                    .from(qMenuLogEntity)
-                                    .orderBy(qMenuLogEntity.insertDateTime.desc())
-                                    .limit(5)
+                );
 
-                            )
-                        )
-                )
-                .join(qMenuTypeEntity)
-                .on(qMenuEntity.menuType.eq(qMenuTypeEntity.menuType))
-                .fetch();
+            if (totalCnt > EXCEPT_NUM) {
+                query.where(
+                    qMenuEntity.id.notIn(
+                        JPAExpressions
+                            .select(qMenuLogEntity.menuId)
+                            .from(qMenuLogEntity)
+                            .orderBy(qMenuLogEntity.insertDateTime.desc())
+                            .limit(EXCEPT_NUM)
+                    )
+                );
+            } else {
+                log.debug("totalCnt <= EXCEPT_NUM");
+            }
+
+            query.join(qMenuTypeEntity)
+                .on(qMenuEntity.menuType.eq(qMenuTypeEntity.menuType));
+
+            List<MenuResult> list = query.fetch();
 
             int[] randomInt = RandomUtil.getRandomNumberArray(0, list.size() - 1, count);
             log.debug(Arrays.toString(randomInt));
@@ -80,6 +87,7 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
             }
             return tmp;
         } else {
+            log.debug("No MenuList");
             return null;
         }
     }
