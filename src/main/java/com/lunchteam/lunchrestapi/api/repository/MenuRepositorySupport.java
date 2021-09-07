@@ -61,15 +61,16 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
                 );
 
             if (totalCnt > EXCEPT_NUM) {
-                query.where(
-                    qMenuEntity.id.notIn(
-                        JPAExpressions
-                            .select(qMenuLogEntity.menuId)
-                            .from(qMenuLogEntity)
-                            .orderBy(qMenuLogEntity.insertDateTime.desc())
-                            .limit(EXCEPT_NUM)
-                    )
-                );
+                // fetchJoin에서 Limit 적용안되는 이슈로 인해 limit 조건 주석처리
+//                query.where(
+//                    qMenuEntity.id.notIn(
+//                        JPAExpressions
+//                            .select(qMenuLogEntity.menuId)
+//                            .from(qMenuLogEntity)
+//                            .orderBy(qMenuLogEntity.insertDateTime.desc())
+//                            .limit(EXCEPT_NUM)
+//                    )
+//                );
             } else {
                 log.debug("totalCnt <= EXCEPT_NUM");
             }
