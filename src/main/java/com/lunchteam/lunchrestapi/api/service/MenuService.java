@@ -8,12 +8,16 @@ import com.lunchteam.lunchrestapi.api.dto.menu.MenuResult;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuTypeRequestDto;
 import com.lunchteam.lunchrestapi.api.entity.MenuEntity;
 import com.lunchteam.lunchrestapi.api.entity.MenuLogEntity;
+import com.lunchteam.lunchrestapi.api.mapper.MenuMapper;
 import com.lunchteam.lunchrestapi.api.repository.MenuLogRepository;
 import com.lunchteam.lunchrestapi.api.repository.MenuRepository;
 import com.lunchteam.lunchrestapi.api.repository.MenuRepositorySupport;
 import com.lunchteam.lunchrestapi.api.repository.MenuTypeRepository;
 import com.lunchteam.lunchrestapi.api.response.StatusEnum;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Handler;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +32,7 @@ public class MenuService {
     private final MenuTypeRepository menuTypeRepository;
     private final MenuLogRepository menuLogRepository;
     private final MenuRepositorySupport menuRepositorySupport;
+    private final MenuMapper menuMapper;
 
     @Transactional
     public StatusEnum addMenu(MenuRequestDto menuRequestDto) {
@@ -44,7 +49,10 @@ public class MenuService {
 
     @Transactional
     public List<MenuResult> getRandomMenu(int count) {
-        return menuRepositorySupport.getRandomMenu(count);
+        Map<String, Object> params = new HashMap<>();
+        params.put("number", count);
+        return menuMapper.getRandomMenu(params);
+//        return menuRepositorySupport.getRandomMenu(count);
     }
 
     @Transactional
