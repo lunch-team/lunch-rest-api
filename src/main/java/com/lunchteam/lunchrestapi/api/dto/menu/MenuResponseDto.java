@@ -21,6 +21,7 @@ public class MenuResponseDto extends BasicResponseDto {
     private String name;
     private String menuType;
     private String menuName;
+    private Long visitCount;
     private LocalDateTime recentVisit;
     private LocalDateTime insertDateTime;
 
@@ -32,6 +33,7 @@ public class MenuResponseDto extends BasicResponseDto {
             .menuType(menu.getMenuType())
             .menuName(menu.getMenuName())
             .recentVisit(menu.getRecentVisit())
+            .visitCount(menu.getVisitCount())
             .build();
     }
 
