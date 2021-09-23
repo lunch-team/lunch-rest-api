@@ -94,8 +94,8 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
     }
 
     @Transactional
-    public List<MenuResult> getAllMenu() {
-        return queryFactory
+    public List<MenuResult> getAllMenu(MenuRequestDto menuRequestDto) {
+        JPAQuery<MenuResult> query = queryFactory
             .select(
                 Projections.fields(
                     MenuResult.class,
@@ -119,10 +119,17 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
                     qMenuEntity.insertDateTime
                 )
             ).from(qMenuEntity)
-            .where(qMenuEntity.useYn.eq("Y"))
-            .leftJoin(qMenuTypeEntity)
-            .on(qMenuEntity.menuType.eq(qMenuTypeEntity.menuType))
-            .fetch();
+            .where(qMenuEntity.useYn.eq("Y"));
+        if (!"".equals(menuRequestDto.getMenuType())
+            && menuRequestDto.getMenuType() != null
+            && !"all".equals(menuRequestDto.getMenuType())
+        ) {
+            query.where(qMenuEntity.menuType.eq(menuRequestDto.getMenuType()));
+        }
+        query.leftJoin(qMenuTypeEntity)
+            .on(qMenuEntity.menuType.eq(qMenuTypeEntity.menuType));
+
+        return query.fetch();
     }
 
     @Transactional

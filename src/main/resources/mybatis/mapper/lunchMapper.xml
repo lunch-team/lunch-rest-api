@@ -11,13 +11,14 @@
     select *
     from lunch_menu lm
     where lm.use_yn = 'Y'
-      and lm.id not in (
-      select *
-      from (select menu_id
-            from lunch_log ll
-            order by ll.insert_date_time desc
-            limit 5) as tmp
-    )
+      and lm.id not in (select *
+                        from (select menu_id
+                              from lunch_log ll
+                              order by ll.insert_date_time desc
+                              limit 5) as tmp)
+      <if test="menuType != null and (!menuType.equalsIgnoreCase('all'))">
+        and lm.menu_type = #{menuType}
+      </if>
     order by rand()
     limit #{number}
   </select>

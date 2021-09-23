@@ -48,16 +48,17 @@ public class MenuService {
     }
 
     @Transactional
-    public List<MenuResult> getRandomMenu(int count) {
+    public List<MenuResult> getRandomMenu(MenuRequestDto menuRequestDto) {
         Map<String, Object> params = new HashMap<>();
-        params.put("number", count);
+        params.put("number", menuRequestDto.getRandomNumber());
+        params.put("menuType", menuRequestDto.getMenuType());
+
         return menuMapper.getRandomMenu(params);
-//        return menuRepositorySupport.getRandomMenu(count);
     }
 
     @Transactional
-    public List<MenuResult> getAllMenu() {
-        return menuRepositorySupport.getAllMenu();
+    public List<MenuResult> getAllMenu(MenuRequestDto menuRequestDto) {
+        return menuRepositorySupport.getAllMenu(menuRequestDto);
     }
 
     @Transactional

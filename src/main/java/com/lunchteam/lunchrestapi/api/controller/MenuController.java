@@ -60,7 +60,7 @@ public class MenuController {
     /**
      * 랜덤 메뉴 가져오기
      *
-     * @param menuRequestDto randomNumber
+     * @param menuRequestDto randomNumber, menuType(include 'all')
      * @return List
      */
     @PostMapping("/getRandomMenu")
@@ -69,8 +69,7 @@ public class MenuController {
     ) {
         try {
             List<MenuResponseDto> result
-                = MenuResponseDto.listOfMenuResult(
-                menuService.getRandomMenu(menuRequestDto.getRandomNumber()));
+                = MenuResponseDto.listOfMenuResult(menuService.getRandomMenu(menuRequestDto));
             return ResultHandler.setResult(result, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             e.printStackTrace();
@@ -82,13 +81,16 @@ public class MenuController {
     /**
      * 모든 메뉴 가져오기
      *
+     * @param menuRequestDto menuType, order
      * @return List
      */
-    @GetMapping("/getAllMenu")
-    public ResponseEntity<? extends BasicResponse> getAllMenu() {
+    @PostMapping("/getAllMenu")
+    public ResponseEntity<? extends BasicResponse> getAllMenu(
+        @RequestBody MenuRequestDto menuRequestDto
+    ) {
         try {
             List<MenuResponseDto> result =
-                MenuResponseDto.listOfMenuResult(menuService.getAllMenu());
+                MenuResponseDto.listOfMenuResult(menuService.getAllMenu(menuRequestDto));
             return ResultHandler.setResult(result, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             e.printStackTrace();
