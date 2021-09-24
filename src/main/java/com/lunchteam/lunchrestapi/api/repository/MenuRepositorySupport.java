@@ -1,6 +1,6 @@
 package com.lunchteam.lunchrestapi.api.repository;
 
-import com.lunchteam.lunchrestapi.api.dto.DtoEnum;
+import com.lunchteam.lunchrestapi.api.dto.OrderEnum;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuResult;
 import com.lunchteam.lunchrestapi.api.entity.MenuEntity;
@@ -10,9 +10,13 @@ import com.lunchteam.lunchrestapi.api.entity.QMenuTypeEntity;
 import com.lunchteam.lunchrestapi.util.RandomUtil;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.DateTimePath;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -60,8 +64,8 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
                     qMenuEntity.useYn.eq("Y")
                 );
 
-            if (totalCnt > EXCEPT_NUM) {
-                // fetchJoin에서 Limit 적용안되는 이슈로 인해 limit 조건 주석처리
+            // fetchJoin에서 Limit 적용안되는 이슈로 인해 limit 조건 주석처리
+//            if (totalCnt > EXCEPT_NUM) {
 //                query.where(
 //                    qMenuEntity.id.notIn(
 //                        JPAExpressions
@@ -71,9 +75,9 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
 //                            .limit(EXCEPT_NUM)
 //                    )
 //                );
-            } else {
-                log.debug("totalCnt <= EXCEPT_NUM");
-            }
+//            } else {
+//                log.debug("totalCnt <= EXCEPT_NUM");
+//            }
 
             query.join(qMenuTypeEntity)
                 .on(qMenuEntity.menuType.eq(qMenuTypeEntity.menuType));
@@ -95,6 +99,10 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
 
     @Transactional
     public List<MenuResult> getAllMenu(MenuRequestDto menuRequestDto) {
+        DateTimePath<LocalDateTime> recentVisit
+            = Expressions.dateTimePath(LocalDateTime.class, "recentVisit");
+        NumberPath<Long> visitCount
+            = Expressions.numberPath(Long.class, "visitCount");
         JPAQuery<MenuResult> query = queryFactory
             .select(
                 Projections.fields(
@@ -107,14 +115,12 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
                     ExpressionUtils.as(
                         JPAExpressions.select(qMenuLogEntity.insertDateTime.max())
                             .from(qMenuLogEntity)
-                            .where(qMenuLogEntity.menuId.eq(qMenuEntity.id)
-                            ), "recentVisit"
+                            .where(qMenuLogEntity.menuId.eq(qMenuEntity.id)), recentVisit
                     ),
                     ExpressionUtils.as(
                         JPAExpressions.select(qMenuLogEntity.id.count())
                             .from(qMenuLogEntity)
-                            .where(qMenuLogEntity.menuId.eq(qMenuEntity.id)
-                            ), "visitCount"
+                            .where(qMenuLogEntity.menuId.eq(qMenuEntity.id)), visitCount
                     ),
                     qMenuEntity.insertDateTime
                 )
@@ -128,6 +134,13 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
         }
         query.leftJoin(qMenuTypeEntity)
             .on(qMenuEntity.menuType.eq(qMenuTypeEntity.menuType));
+        if ("recent".equalsIgnoreCase(menuRequestDto.getOrderType().getValue())) {
+            // TODO: desc / asc 정렬 추가 필요
+            query.orderBy(recentVisit.desc());
+        } else if ("count".equalsIgnoreCase(menuRequestDto.getOrderType().getValue())) {
+            query.orderBy(visitCount.desc());
+        }
+        query.orderBy(qMenuEntity.name.asc());
 
         return query.fetch();
     }
@@ -184,7 +197,7 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
             .on(qMenuLogEntity.menuId.eq(qMenuEntity.id))
             .join(qMenuTypeEntity)
             .on(qMenuEntity.menuType.eq(qMenuTypeEntity.menuType));
-        if (menuRequestDto.getOrder() == DtoEnum.DESC) {
+        if (menuRequestDto.getOrder() == OrderEnum.DESC) {
             query.orderBy(qMenuLogEntity.insertDateTime.desc());
         } else {
             query.orderBy(qMenuLogEntity.insertDateTime.asc());

@@ -1,12 +1,13 @@
 package com.lunchteam.lunchrestapi.api.dto;
 
-public enum DtoEnum {
-    ASC("asc"),
-    DESC("desc");
+public enum OrderTypeEnum {
+    ABC("abc"),
+    RECENT("recent"),
+    COUNT("count") ;
 
     private final String value;
 
-    DtoEnum(String value) {
+    OrderTypeEnum(String value) {
         this.value = value;
     }
 

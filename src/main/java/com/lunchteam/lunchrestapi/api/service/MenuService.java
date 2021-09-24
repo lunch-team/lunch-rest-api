@@ -1,6 +1,6 @@
 package com.lunchteam.lunchrestapi.api.service;
 
-import com.lunchteam.lunchrestapi.api.dto.DtoEnum;
+import com.lunchteam.lunchrestapi.api.dto.OrderEnum;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuModifyRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuResponseDto;
@@ -17,7 +17,6 @@ import com.lunchteam.lunchrestapi.api.response.StatusEnum;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Handler;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -112,7 +111,7 @@ public class MenuService {
 
     @Transactional
     public List<MenuResult> getVisitMenuList(MenuRequestDto menuRequestDto) {
-        if (menuRequestDto.getOrder() == DtoEnum.ASC) {
+        if (menuRequestDto.getOrder() == OrderEnum.ASC) {
             log.info("order: " + menuRequestDto.getOrder());
         }
         return menuRepositorySupport.getVisitMenuList(menuRequestDto);

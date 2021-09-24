@@ -1,6 +1,7 @@
 package com.lunchteam.lunchrestapi.api.dto.menu;
 
-import com.lunchteam.lunchrestapi.api.dto.DtoEnum;
+import com.lunchteam.lunchrestapi.api.dto.OrderEnum;
+import com.lunchteam.lunchrestapi.api.dto.OrderTypeEnum;
 import com.lunchteam.lunchrestapi.api.entity.MenuEntity;
 import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -24,7 +25,11 @@ public class MenuRequestDto {
     // 랜덤으로 가져올 메뉴 개수
     private int randomNumber;
 
-    private DtoEnum order;
+    // 정렬 타입(abc, recent, count)
+    private OrderTypeEnum orderType;
+
+    // 정렬 순서(desc / asc)
+    private OrderEnum order;
 
     /**
      * 메뉴 추가
