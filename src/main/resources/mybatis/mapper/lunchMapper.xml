@@ -12,10 +12,10 @@
       lm.id,
       lm.name,
       lm.location,
-      lm.menu_type as menuType,
-      lmt.menu_name as menuName,
-      max(ll.insert_date_time) as recentVisit,
-      count(ll.id)             as visitCount
+      lm.menu_type,
+      lmt.menu_name,
+      max(ll.insert_date_time) as recent_visit,
+      count(ll.id)             as visit_count
     from lunch_menu lm
       left outer join lunch_log ll on lm.id = ll.menu_id
       left join lunch_menu_type lmt on lm.menu_type = lmt.menu_type
