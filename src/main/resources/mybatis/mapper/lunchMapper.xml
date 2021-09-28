@@ -6,7 +6,7 @@
 <mapper namespace="com.lunchteam.lunchrestapi.api.mapper.MenuMapper">
   <select
     id="getRandomMenu"
-    resultType="com.lunchteam.lunchrestapi.api.dto.menu.MenuResult"
+    resultType="MenuResult"
     parameterType="java.util.Map">
     select
       lm.id,
