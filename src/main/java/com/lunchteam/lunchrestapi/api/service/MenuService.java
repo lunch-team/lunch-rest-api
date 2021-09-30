@@ -33,6 +33,12 @@ public class MenuService {
     private final MenuRepositorySupport menuRepositorySupport;
     private final MenuMapper menuMapper;
 
+    /**
+     * 메뉴 추가
+     *
+     * @param menuRequestDto location, name, menuType
+     * @return StatusEnum 204
+     */
     @Transactional
     public StatusEnum addMenu(MenuRequestDto menuRequestDto) {
         if (menuRepository.existsByNameAndLocation(
@@ -46,6 +52,12 @@ public class MenuService {
         return StatusEnum.SUCCESS;
     }
 
+    /**
+     * 랜덤 메뉴 가져오기
+     *
+     * @param menuRequestDto randomNumber, menuType(include 'all')
+     * @return List
+     */
     @Transactional
     public List<MenuResult> getRandomMenu(MenuRequestDto menuRequestDto) {
         Map<String, Object> params = new HashMap<>();
@@ -55,11 +67,23 @@ public class MenuService {
         return menuMapper.getRandomMenu(params);
     }
 
+    /**
+     * 모든 메뉴 가져오기
+     *
+     * @param menuRequestDto menuType, order
+     * @return List
+     */
     @Transactional
     public List<MenuResult> getAllMenu(MenuRequestDto menuRequestDto) {
         return menuRepositorySupport.getAllMenu(menuRequestDto);
     }
 
+    /**
+     * 메뉴 수정
+     *
+     * @param menuModifyRequestDto id, name, location, menuType
+     * @return StatusEnum 204
+     */
     @Transactional
     public StatusEnum modifyMenu(MenuModifyRequestDto menuModifyRequestDto) {
         if (!menuRepository.existsByIdAndUseYn(menuModifyRequestDto.getId(), "Y")) {
@@ -76,8 +100,19 @@ public class MenuService {
         return result > 0 ? StatusEnum.SUCCESS : StatusEnum.NO_MENU;
     }
 
+    /**
+     * 메뉴 삭제
+     *
+     * @param menuModifyRequestDto id
+     * @return StatusEnum
+     */
     @Transactional
-    public StatusEnum deleteMenu(Long id) {
+    public StatusEnum deleteMenu(MenuModifyRequestDto menuModifyRequestDto) {
+        Long id = menuModifyRequestDto.getId();
+        if (id == null) {
+            log.warn("No Id");
+            return StatusEnum.BAD_REQUEST;
+        }
         if (!menuRepository.existsByIdAndUseYn(id, "Y")) {
             return StatusEnum.NO_MENU;
         }
@@ -86,6 +121,12 @@ public class MenuService {
         return result > 0 ? StatusEnum.SUCCESS : StatusEnum.NO_MENU;
     }
 
+    /**
+     * 메뉴 방문 추가
+     *
+     * @param menuModifyRequestDto id
+     * @return Menu
+     */
     @Transactional
     public MenuEntity visitMenu(MenuModifyRequestDto menuModifyRequestDto) {
         if (!menuRepository.existsByIdAndUseYn(menuModifyRequestDto.getId(), "Y")) {
@@ -95,6 +136,12 @@ public class MenuService {
         return menuRepository.findById(result.getMenuId()).orElse(null);
     }
 
+    /**
+     * 메뉴 타입 추가
+     *
+     * @param menuTypeRequestDto menuName, menuType
+     * @return StatusEnum 204
+     */
     @Transactional
     public StatusEnum addMenuType(MenuTypeRequestDto menuTypeRequestDto) {
         if (menuRepositorySupport.existsByMenuType(menuTypeRequestDto.getMenuType())) {
@@ -104,11 +151,22 @@ public class MenuService {
         return StatusEnum.SUCCESS;
     }
 
+    /**
+     * 메뉴 타입 가져오기
+     *
+     * @return List
+     */
     @Transactional
     public List<MenuResult> getMenuType() {
         return menuRepositorySupport.getMenuType();
     }
 
+    /**
+     * 방문 로그 가져오기
+     *
+     * @param menuRequestDto order(ASC, DESC)
+     * @return List
+     */
     @Transactional
     public List<MenuResult> getVisitMenuList(MenuRequestDto menuRequestDto) {
         if (menuRequestDto.getOrder() == OrderEnum.ASC) {
@@ -117,8 +175,19 @@ public class MenuService {
         return menuRepositorySupport.getVisitMenuList(menuRequestDto);
     }
 
+    /**
+     * 방문 로그 삭제
+     *
+     * @param menuModifyRequestDto id
+     * @return StatusEnum
+     */
     @Transactional
-    public StatusEnum deleteMenuLog(Long id) {
+    public StatusEnum deleteMenuLog(MenuModifyRequestDto menuModifyRequestDto) {
+        Long id = menuModifyRequestDto.getId();
+        if (id == null) {
+            log.warn("No Id");
+            return StatusEnum.BAD_REQUEST;
+        }
         if (!menuLogRepository.existsById(id)) {
             return StatusEnum.NO_MENU;
         }

@@ -137,12 +137,7 @@ public class MenuController {
         @RequestBody MenuModifyRequestDto menuModifyRequestDto) {
 
         try {
-            if (menuModifyRequestDto.getId() == null) {
-                log.warn("No Id");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-            }
-
-            StatusEnum result = menuService.deleteMenu(menuModifyRequestDto.getId());
+            StatusEnum result = menuService.deleteMenu(menuModifyRequestDto);
             return ResultHandler.setResult(result, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             e.printStackTrace();
@@ -241,12 +236,7 @@ public class MenuController {
         @RequestBody MenuModifyRequestDto menuModifyRequestDto
     ) {
         try {
-            if (menuModifyRequestDto.getId() == null) {
-                log.warn("No Id");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-            }
-
-            StatusEnum result = menuService.deleteMenuLog(menuModifyRequestDto.getId());
+            StatusEnum result = menuService.deleteMenuLog(menuModifyRequestDto);
             return ResultHandler.setResult(result, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             e.printStackTrace();
