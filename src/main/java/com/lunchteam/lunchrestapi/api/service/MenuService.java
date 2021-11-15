@@ -204,11 +204,11 @@ public class MenuService {
      */
     @Transactional
     public StatusEnum updateMenuLog(MenuModifyRequestDto menuModifyRequestDto) {
-        if (!menuRepository.existsByIdAndUseYn(menuModifyRequestDto.getId(), "Y")) {
+        if (!menuLogRepository.existsById(menuModifyRequestDto.getId())) {
             return StatusEnum.NO_MENU;
         }
         MenuLogEntity menuLog = MenuLogEntity.UpdateMenuLog()
-            .menuId(menuModifyRequestDto.getId())
+            .id(menuModifyRequestDto.getId())
             .insertDateTime(menuModifyRequestDto.getInsertDateTime())
             .build();
         long result = menuRepositorySupport.updateMenuLogById(menuLog);

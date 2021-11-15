@@ -229,7 +229,7 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
     public long updateMenuLogById(MenuLogEntity menuLog) {
         return queryFactory.update(qMenuLogEntity)
             .set(qMenuLogEntity.insertDateTime, menuLog.getInsertDateTime())
-            .where(qMenuLogEntity.menuId.eq(menuLog.getMenuId()))
+            .where(qMenuLogEntity.id.eq(menuLog.getId()))
             .execute();
     }
 }
