@@ -243,4 +243,23 @@ public class MenuController {
             return ResponseEntity.internalServerError().build();
         }
     }
+
+    /**
+     * 방문 로그 삭제
+     *
+     * @param menuModifyRequestDto id
+     * @return 204
+     */
+    @PostMapping("/updateMenuLog")
+    public ResponseEntity<? extends BasicResponse> updateMenuLog(
+        @RequestBody MenuModifyRequestDto menuModifyRequestDto
+    ) {
+        try {
+            StatusEnum result = menuService.updateMenuLog(menuModifyRequestDto);
+            return ResultHandler.setResult(result, HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 }

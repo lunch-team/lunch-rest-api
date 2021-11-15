@@ -4,6 +4,7 @@ import com.lunchteam.lunchrestapi.api.dto.OrderEnum;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuResult;
 import com.lunchteam.lunchrestapi.api.entity.MenuEntity;
+import com.lunchteam.lunchrestapi.api.entity.MenuLogEntity;
 import com.lunchteam.lunchrestapi.api.entity.QMenuEntity;
 import com.lunchteam.lunchrestapi.api.entity.QMenuLogEntity;
 import com.lunchteam.lunchrestapi.api.entity.QMenuTypeEntity;
@@ -138,13 +139,13 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
         // 정렬 타입
         if ("recent".equalsIgnoreCase(menuRequestDto.getOrderType().getValue())) {
             // 정렬 순서
-            if("DESC".equalsIgnoreCase(menuRequestDto.getOrder().getValue())) {
+            if ("DESC".equalsIgnoreCase(menuRequestDto.getOrder().getValue())) {
                 query.orderBy(recentVisit.desc());
             } else {
                 query.orderBy(recentVisit.asc());
             }
         } else if ("count".equalsIgnoreCase(menuRequestDto.getOrderType().getValue())) {
-            if("DESC".equalsIgnoreCase(menuRequestDto.getOrder().getValue())) {
+            if ("DESC".equalsIgnoreCase(menuRequestDto.getOrder().getValue())) {
                 query.orderBy(visitCount.desc());
             } else {
                 query.orderBy(visitCount.asc());
@@ -221,6 +222,14 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
     public long deleteMenuLogById(Long id) {
         return queryFactory.delete(qMenuLogEntity)
             .where(qMenuLogEntity.id.eq(id))
+            .execute();
+    }
+
+    @Transactional
+    public long updateMenuLogById(MenuLogEntity menuLog) {
+        return queryFactory.update(qMenuLogEntity)
+            .set(qMenuLogEntity.insertDateTime, menuLog.getInsertDateTime())
+            .where(qMenuLogEntity.menuId.eq(menuLog.getMenuId()))
             .execute();
     }
 }

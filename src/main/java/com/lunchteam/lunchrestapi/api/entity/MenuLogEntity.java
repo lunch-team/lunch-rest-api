@@ -31,4 +31,10 @@ public class MenuLogEntity {
     ) {
         this.menuId = menuId;
     }
+
+    @Builder(builderClassName = "UpdateMenuLog", builderMethodName = "UpdateMenuLog")
+    public MenuLogEntity(Long menuId, LocalDateTime insertDateTime) {
+        this.menuId = menuId;
+        this.insertDateTime = insertDateTime;
+    }
 }

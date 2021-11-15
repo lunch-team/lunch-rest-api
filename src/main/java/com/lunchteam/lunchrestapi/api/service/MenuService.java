@@ -195,4 +195,24 @@ public class MenuService {
         log.info("deleteMenuLogById result: " + result);
         return result > 0 ? StatusEnum.SUCCESS : StatusEnum.NO_MENU;
     }
+
+    /**
+     * 방문 로그 삭제
+     *
+     * @param menuModifyRequestDto id
+     * @return 204
+     */
+    @Transactional
+    public StatusEnum updateMenuLog(MenuModifyRequestDto menuModifyRequestDto) {
+        if (!menuRepository.existsByIdAndUseYn(menuModifyRequestDto.getId(), "Y")) {
+            return StatusEnum.NO_MENU;
+        }
+        MenuLogEntity menuLog = MenuLogEntity.UpdateMenuLog()
+            .menuId(menuModifyRequestDto.getId())
+            .insertDateTime(menuModifyRequestDto.getInsertDateTime())
+            .build();
+        long result = menuRepositorySupport.updateMenuLogById(menuLog);
+        log.info("updateMenuLogById result: " + result);
+        return result > 0 ? StatusEnum.SUCCESS : StatusEnum.NO_MENU;
+    }
 }

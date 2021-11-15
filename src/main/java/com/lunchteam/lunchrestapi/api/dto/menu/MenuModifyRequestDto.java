@@ -2,6 +2,7 @@ package com.lunchteam.lunchrestapi.api.dto.menu;
 
 import com.lunchteam.lunchrestapi.api.entity.MenuEntity;
 import com.lunchteam.lunchrestapi.api.entity.MenuLogEntity;
+import java.time.LocalDateTime;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,8 @@ public class MenuModifyRequestDto {
     // 메뉴
     @NotBlank(message = "no_menuType")
     private String menuType;
+
+    private LocalDateTime insertDateTime;
 
     /**
      * 메뉴 추가
