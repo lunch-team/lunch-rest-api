@@ -26,7 +26,7 @@ public class CORSFilter implements Filter {
         throws IOException, ServletException {
 
         String remoteAddr = request.getRemoteAddr();
-//        log.debug("[RemoteAddr]: " + remoteAddr);
+        log.debug("[RemoteAddr]: " + remoteAddr);
         if (remoteAddr.equals("0:0:0:0:0:0:0:1")) {
             remoteAddr = "localhost";
         }
