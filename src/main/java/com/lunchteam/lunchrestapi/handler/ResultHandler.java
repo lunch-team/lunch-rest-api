@@ -37,7 +37,7 @@ public class ResultHandler {
             return ResponseEntity.status(errorStatus).build();
         } else {
             log.warn("No kind of result: " + result);
-            return ResponseEntity.internalServerError().build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }
