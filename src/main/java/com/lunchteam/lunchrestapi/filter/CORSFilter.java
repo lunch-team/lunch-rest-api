@@ -27,12 +27,12 @@ public class CORSFilter implements Filter {
 
         String remoteAddr = request.getRemoteAddr();
         log.debug("[RemoteAddr]: " + remoteAddr);
-        if (remoteAddr.equals("0:0:0:0:0:0:0:1")) {
-            remoteAddr = "localhost";
-        }
+//        if (remoteAddr.equals("0:0:0:0:0:0:0:1")) {
+//            remoteAddr = "localhost";
+//        }
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         httpServletResponse
-            .setHeader("Access-Control-Allow-Origin", "http://" + remoteAddr + ":9998");
+            .setHeader("Access-Control-Allow-Origin", "http://58.181.28.53:11198");// + remoteAddr + ":9998");
         httpServletResponse
             .setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
         httpServletResponse
