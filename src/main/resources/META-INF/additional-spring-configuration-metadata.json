@@ -4,5 +4,15 @@
       "name": "jwt.secret",
       "type": "java.lang.String",
       "description": "jwt secret ."
+    },
+    {
+      "name": "cors.ip",
+      "type": "java.lang.String",
+      "description": "origin ip."
+    },
+    {
+      "name": "cors.port",
+      "type": "java.lang.String",
+      "description": "origin port."
     }
   ] }

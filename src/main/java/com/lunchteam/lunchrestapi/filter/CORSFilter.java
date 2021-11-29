@@ -1,5 +1,6 @@
 package com.lunchteam.lunchrestapi.filter;
 
+import com.lunchteam.lunchrestapi.property.ApplicationYamlReader;
 import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -21,18 +22,20 @@ import org.springframework.stereotype.Component;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class CORSFilter implements Filter {
 
+    private final ApplicationYamlReader properties;
+
+    public CORSFilter(ApplicationYamlReader properties) {
+        this.properties = properties;
+    }
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
         throws IOException, ServletException {
 
-        String remoteAddr = request.getRemoteAddr();
-        log.debug("[RemoteAddr]: " + remoteAddr);
-//        if (remoteAddr.equals("0:0:0:0:0:0:0:1")) {
-//            remoteAddr = "localhost";
-//        }
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         httpServletResponse
-            .setHeader("Access-Control-Allow-Origin", "http://58.181.28.53:11198");// + remoteAddr + ":9998");
+            .setHeader("Access-Control-Allow-Origin",
+                properties.getIP() + ":" + properties.getPORT());
         httpServletResponse
             .setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
         httpServletResponse
