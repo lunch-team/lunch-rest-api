@@ -9,6 +9,7 @@ import com.lunchteam.lunchrestapi.security.TokenProvider;
 import com.lunchteam.lunchrestapi.security.dto.RefreshTokenDto;
 import com.lunchteam.lunchrestapi.security.dto.TokenDto;
 import com.lunchteam.lunchrestapi.security.dto.TokenRequestDto;
+import com.lunchteam.lunchrestapi.util.VerifyUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -29,6 +30,10 @@ public class AuthService {
 
     @Transactional
     public String signup(MemberRequestDto memberRequestDto) {
+        if (!VerifyUtil.isValidId(memberRequestDto.getLoginId())) {
+            return "invalid_login_id";
+        }
+
         if (memberRepository.existsByEmail(memberRequestDto.getEmail())) {
             return "exist_email";
         }

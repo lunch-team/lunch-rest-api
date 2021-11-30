@@ -24,6 +24,7 @@ public class MemberRequestDto {
     @NotBlank(message = "err_name_blank")
     private String name;
     @NotBlank(message = "err_password_blank")
+    @Size(min = 4, max = 20, message = "err_password_size")
     private String password;
 
     private String newPassword;
