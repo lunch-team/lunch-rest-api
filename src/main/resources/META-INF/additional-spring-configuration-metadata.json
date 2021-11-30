@@ -14,5 +14,10 @@
       "name": "cors.port",
       "type": "java.lang.String",
       "description": "origin port."
+    },
+    {
+      "name": "cors.all",
+      "type": "java.lang.String",
+      "description": "cors all."
     }
   ] }

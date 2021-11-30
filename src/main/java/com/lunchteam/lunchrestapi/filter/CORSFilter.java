@@ -32,10 +32,14 @@ public class CORSFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
         throws IOException, ServletException {
 
+        String host = "*";
+        if (!properties.isALL()) {
+            host = properties.getIP() + ":" + properties.getPORT();
+        }
+
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         httpServletResponse
-            .setHeader("Access-Control-Allow-Origin",
-                properties.getIP() + ":" + properties.getPORT());
+            .setHeader("Access-Control-Allow-Origin", host);
         httpServletResponse
             .setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
         httpServletResponse

@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "cors")
 public class ApplicationYamlReader {
 
+    private boolean ALL;
     private String IP;
     private String PORT;
 }

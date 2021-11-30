@@ -51,6 +51,15 @@ public class MemberEntity {
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
+    @Builder(builderClassName = "UserLoginInfo", builderMethodName = "UserLoginInfo")
+    public MemberEntity(
+        String loginId,
+        String name
+    ) {
+        this.loginId = loginId;
+        this.name = name;
+    }
+
     /**
      * 회원 가입 빌더
      *

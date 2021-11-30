@@ -99,4 +99,9 @@ public class AuthService {
         // 토큰 발급
         return tokenDto;
     }
+
+    @Transactional
+    public MemberEntity getMemberInfo(MemberRequestDto memberRequestDto) {
+        return memberRepository.findByLoginId(memberRequestDto.getLoginId()).orElse(null);
+    }
 }
