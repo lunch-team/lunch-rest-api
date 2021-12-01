@@ -19,5 +19,10 @@
       "name": "cors.all",
       "type": "java.lang.String",
       "description": "cors all."
+    },
+    {
+      "name": "file.directory",
+      "type": "java.lang.String",
+      "description": "file directory."
     }
   ] }

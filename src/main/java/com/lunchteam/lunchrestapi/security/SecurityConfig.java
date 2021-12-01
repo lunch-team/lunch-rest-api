@@ -71,7 +71,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
             .requestMatchers(CorsUtils::isPreFlightRequest)
             .permitAll()
-            .antMatchers("/auth/**", "/api/connectionTest", "/menu/**", "/chat/**", "/ws-stomp/**")
+            .antMatchers(
+                "/auth/**",
+                "/api/connectionTest",
+                "/menu/**",
+                "/chat/**",
+                "/ws-stomp/**",
+                "/file/**"
+            )
             .permitAll()
             .anyRequest().authenticated()   // 나머지 API 는 전부 인증 필요
 

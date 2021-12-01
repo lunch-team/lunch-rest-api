@@ -1,6 +1,6 @@
 package com.lunchteam.lunchrestapi.filter;
 
-import com.lunchteam.lunchrestapi.property.ApplicationYamlReader;
+import com.lunchteam.lunchrestapi.property.CorsProperties;
 import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -22,9 +22,9 @@ import org.springframework.stereotype.Component;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class CORSFilter implements Filter {
 
-    private final ApplicationYamlReader properties;
+    private final CorsProperties properties;
 
-    public CORSFilter(ApplicationYamlReader properties) {
+    public CORSFilter(CorsProperties properties) {
         this.properties = properties;
     }
 

@@ -1,6 +1,7 @@
 package com.lunchteam.lunchrestapi.util;
 
 import java.util.Random;
+import java.util.UUID;
 
 public class RandomUtil {
 
@@ -26,5 +27,15 @@ public class RandomUtil {
         }
 
         return result;
+    }
+
+    /**
+     * Generate Random 32 Character(with decimal)
+     *
+     * @return String Random Character
+     */
+    public static String getRandomString() {
+
+        return UUID.randomUUID().toString().replaceAll("-", "");
     }
 }
