@@ -53,9 +53,11 @@ public class MemberEntity {
 
     @Builder(builderClassName = "UserLoginInfo", builderMethodName = "UserLoginInfo")
     public MemberEntity(
+        Long id,
         String loginId,
         String name
     ) {
+        this.id = id;
         this.loginId = loginId;
         this.name = name;
     }

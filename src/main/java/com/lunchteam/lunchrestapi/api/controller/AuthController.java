@@ -55,6 +55,7 @@ public class AuthController {
         MemberEntity member = authService.getMemberInfo(memberRequestDto);
         resultMap.put("memberInfo",
             MemberEntity.UserLoginInfo()
+                .id(member.getId())
                 .loginId(member.getLoginId())
                 .name(member.getName())
                 .build());
