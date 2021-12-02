@@ -5,13 +5,16 @@ import com.lunchteam.lunchrestapi.api.dto.menu.MenuModifyRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuResponseDto;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuResult;
+import com.lunchteam.lunchrestapi.api.dto.menu.MenuReviewRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuTypeRequestDto;
 import com.lunchteam.lunchrestapi.api.entity.MenuEntity;
 import com.lunchteam.lunchrestapi.api.entity.MenuLogEntity;
+import com.lunchteam.lunchrestapi.api.entity.MenuReviewEntity;
 import com.lunchteam.lunchrestapi.api.mapper.MenuMapper;
 import com.lunchteam.lunchrestapi.api.repository.MenuLogRepository;
 import com.lunchteam.lunchrestapi.api.repository.MenuRepository;
 import com.lunchteam.lunchrestapi.api.repository.MenuRepositorySupport;
+import com.lunchteam.lunchrestapi.api.repository.MenuReviewRepository;
 import com.lunchteam.lunchrestapi.api.repository.MenuTypeRepository;
 import com.lunchteam.lunchrestapi.api.response.StatusEnum;
 import java.util.HashMap;
@@ -31,6 +34,7 @@ public class MenuService {
     private final MenuTypeRepository menuTypeRepository;
     private final MenuLogRepository menuLogRepository;
     private final MenuRepositorySupport menuRepositorySupport;
+    private final MenuReviewRepository menuReviewRepository;
     private final MenuMapper menuMapper;
 
     /**
@@ -214,5 +218,31 @@ public class MenuService {
         long result = menuRepositorySupport.updateMenuLogById(menuLog);
         log.info("updateMenuLogById result: " + result);
         return result > 0 ? StatusEnum.SUCCESS : StatusEnum.NO_MENU;
+    }
+
+    /**
+     * 리뷰 등록
+     *
+     * @param menuDto contents, menuId, memberId, star
+     * @return 204
+     */
+    @Transactional
+    public StatusEnum registerReview(MenuReviewRequestDto menuDto) {
+        if (!menuRepository.existsById(menuDto.getMenuId())) {
+            return StatusEnum.NO_MENU;
+        } else if (menuDto.getStar() > 10 || menuDto.getStar() < 1) {
+            log.warn("Invalid Star Range.");
+            return StatusEnum.BAD_REQUEST;
+        }
+
+        MenuReviewEntity menuReview = MenuReviewEntity.RegisterReview()
+            .menuId(menuDto.getMenuId())
+            .insertMemberId(menuDto.getMemberId())
+            .star(menuDto.getStar())
+            .contents(menuDto.getContents())
+            .build();
+        MenuReviewEntity reviewResult = menuReviewRepository.save(menuReview);
+        log.info("registerReview result: " + reviewResult.getId());
+        return reviewResult.getId() > 0 ? StatusEnum.SUCCESS : StatusEnum.BAD_REQUEST;
     }
 }

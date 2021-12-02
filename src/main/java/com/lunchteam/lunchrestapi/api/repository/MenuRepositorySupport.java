@@ -5,6 +5,7 @@ import com.lunchteam.lunchrestapi.api.dto.menu.MenuRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuResult;
 import com.lunchteam.lunchrestapi.api.entity.MenuEntity;
 import com.lunchteam.lunchrestapi.api.entity.MenuLogEntity;
+import com.lunchteam.lunchrestapi.api.entity.MenuReviewEntity;
 import com.lunchteam.lunchrestapi.api.entity.QMenuEntity;
 import com.lunchteam.lunchrestapi.api.entity.QMenuLogEntity;
 import com.lunchteam.lunchrestapi.api.entity.QMenuTypeEntity;

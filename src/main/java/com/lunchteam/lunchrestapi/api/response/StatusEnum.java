@@ -12,7 +12,7 @@ public enum StatusEnum {
     INTERNAL_SERVER_ERROR(500, "INTERNAL_SERVER_ERROR");
 
     int statusCode;
-    String msg;
+    final String msg;
 
     StatusEnum(int statusCode, String msg) {
         this.statusCode = statusCode;

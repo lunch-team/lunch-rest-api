@@ -23,13 +23,13 @@ public class MenuReviewEntity {
 
     private Long menuId;
 
-    private String insertMemberId;
+    private Long fileId;
+
+    private Long insertMemberId;
 
     private int star;
 
     private String contents;
-
-    private String fileId;
 
     private String useYn;
 
@@ -39,4 +39,17 @@ public class MenuReviewEntity {
     @UpdateTimestamp
     private LocalDateTime updateDateTime;
 
+    @Builder(builderClassName = "RegisterReview", builderMethodName = "RegisterReview")
+    public MenuReviewEntity(
+        Long menuId,
+        Long insertMemberId,
+        int star,
+        String contents
+    ) {
+        this.menuId = menuId;
+        this.insertMemberId = insertMemberId;
+        this.star = star;
+        this.contents = contents;
+        this.useYn = "Y";
+    }
 }

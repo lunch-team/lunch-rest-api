@@ -3,6 +3,7 @@ package com.lunchteam.lunchrestapi.api.controller;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuModifyRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuResponseDto;
+import com.lunchteam.lunchrestapi.api.dto.menu.MenuReviewRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuTypeRequestDto;
 import com.lunchteam.lunchrestapi.api.response.BasicResponse;
 import com.lunchteam.lunchrestapi.api.response.ErrorResponse;
@@ -256,6 +257,25 @@ public class MenuController {
     ) {
         try {
             StatusEnum result = menuService.updateMenuLog(menuModifyRequestDto);
+            return ResultHandler.setResult(result, HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
+     * 리뷰 등록
+     *
+     * @param menuDto contents, menuId, memberId, star
+     * @return 204
+     */
+    @PostMapping("/registerReview")
+    public ResponseEntity<? extends BasicResponse> registerReview(
+        @RequestBody MenuReviewRequestDto menuDto
+    ) {
+        try {
+            StatusEnum result = menuService.registerReview(menuDto);
             return ResultHandler.setResult(result, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             e.printStackTrace();
