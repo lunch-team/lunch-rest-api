@@ -13,6 +13,7 @@ import lombok.ToString;
 @NoArgsConstructor
 public class MenuReviewRequestDto {
 
+    private Long id;
     private String contents;
     private Long menuId;
     private Long memberId;

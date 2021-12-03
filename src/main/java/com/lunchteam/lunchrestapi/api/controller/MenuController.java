@@ -305,4 +305,23 @@ public class MenuController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    /**
+     * 메뉴 리뷰 삭제
+     *
+     * @param menuDto id
+     * @return 204
+     */
+    @PostMapping("/removeReview")
+    public ResponseEntity<? extends BasicResponse> removeReview(
+        @RequestBody MenuReviewRequestDto menuDto
+    ) {
+        try {
+            StatusEnum result = menuService.removeReview(menuDto);
+            return ResultHandler.setResult(result, HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }

@@ -5,7 +5,6 @@ import com.lunchteam.lunchrestapi.api.dto.menu.MenuRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuResult;
 import com.lunchteam.lunchrestapi.api.entity.MenuEntity;
 import com.lunchteam.lunchrestapi.api.entity.MenuLogEntity;
-import com.lunchteam.lunchrestapi.api.entity.MenuReviewEntity;
 import com.lunchteam.lunchrestapi.api.entity.QMenuEntity;
 import com.lunchteam.lunchrestapi.api.entity.QMenuLogEntity;
 import com.lunchteam.lunchrestapi.api.entity.QMenuTypeEntity;
@@ -173,6 +172,7 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
     public long deleteMenuById(Long id) {
         return queryFactory.update(qMenuEntity)
             .set(qMenuEntity.useYn, "N")
+            .set(qMenuEntity.updateDateTime, LocalDateTime.now())
             .where(qMenuEntity.id.eq(id), qMenuEntity.useYn.eq("Y"))
             .execute();
     }

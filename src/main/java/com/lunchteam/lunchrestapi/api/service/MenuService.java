@@ -275,20 +275,20 @@ public class MenuService {
         log.info(reviewResults.toString());
         log.info(fileResults.toString());
 
-        for(MenuReviewResult menuReviewResult : reviewResults) {
+        for (MenuReviewResult menuReviewResult : reviewResults) {
             Long fileId = menuReviewResult.getFileId();
             log.debug("fileId: " + fileId);
-            if(fileId != null) {
+            if (fileId != null) {
                 List<FileResult> tmpFileList = new ArrayList<>();
                 for (FileResult file : fileResults) {
                     log.debug("groupId: " + file.getGroupId());
                     log.debug("fileid equals getGroupId?" + fileId.equals(file.getGroupId()));
-                    if(fileId.equals(file.getGroupId())) {
+                    if (fileId.equals(file.getGroupId())) {
                         log.debug("add file");
                         tmpFileList.add(file);
                     }
                 }
-                if(!tmpFileList.isEmpty()) {
+                if (!tmpFileList.isEmpty()) {
                     log.debug("set file");
                     menuReviewResult.setFiles(tmpFileList);
                     log.debug(reviewResults.toString());
@@ -296,5 +296,21 @@ public class MenuService {
             }
         }
         return reviewResults;
+    }
+
+    /**
+     * 리뷰 삭제
+     *
+     * @param menuDto id
+     * @return 204
+     */
+    @Transactional
+    public StatusEnum removeReview(MenuReviewRequestDto menuDto) {
+        if (!menuReviewRepository.existsById(menuDto.getId())) {
+            return StatusEnum.NOT_FOUND;
+        }
+        long result = menuReviewRepositorySupport.deleteMenuReview(menuDto);
+        log.info("deleteMenuReview result: " + result);
+        return result > 0 ? StatusEnum.SUCCESS : StatusEnum.NO_MENU;
     }
 }
