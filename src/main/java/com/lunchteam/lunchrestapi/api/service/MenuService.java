@@ -247,6 +247,7 @@ public class MenuService {
         MenuReviewEntity menuReview = MenuReviewEntity.RegisterReview()
             .menuId(menuDto.getMenuId())
             .insertMemberId(menuDto.getMemberId())
+            .fileId(menuDto.getFileId())
             .star(menuDto.getStar())
             .contents(menuDto.getContents())
             .build();
@@ -255,6 +256,12 @@ public class MenuService {
         return reviewResult.getId() > 0 ? StatusEnum.SUCCESS : StatusEnum.BAD_REQUEST;
     }
 
+    /**
+     * 리뷰 가져오기
+     *
+     * @param menuDto menuId
+     * @return list
+     */
     @Transactional
     public List<MenuReviewResult> getReviewList(MenuReviewRequestDto menuDto) {
         if (!menuRepository.existsById(menuDto.getMenuId())) {
@@ -269,20 +276,25 @@ public class MenuService {
         log.info(fileResults.toString());
 
         for(MenuReviewResult menuReviewResult : reviewResults) {
-            Long reviewId = menuReviewResult.getId();
-            log.debug("reviewId: " + reviewId);
-            List<FileResult> tmpFileList = new ArrayList<>();
-            for (FileResult file : fileResults) {
-                log.debug("targetId: " + file.getTargetId());
-                if(reviewId.equals(file.getTargetId())) {
-                    tmpFileList.add(file);
+            Long fileId = menuReviewResult.getFileId();
+            log.debug("fileId: " + fileId);
+            if(fileId != null) {
+                List<FileResult> tmpFileList = new ArrayList<>();
+                for (FileResult file : fileResults) {
+                    log.debug("groupId: " + file.getGroupId());
+                    log.debug("fileid equals getGroupId?" + fileId.equals(file.getGroupId()));
+                    if(fileId.equals(file.getGroupId())) {
+                        log.debug("add file");
+                        tmpFileList.add(file);
+                    }
+                }
+                if(!tmpFileList.isEmpty()) {
+                    log.debug("set file");
+                    menuReviewResult.setFiles(tmpFileList);
+                    log.debug(reviewResults.toString());
                 }
             }
-            if(!tmpFileList.isEmpty()) {
-                menuReviewResult.setFiles(tmpFileList);
-            }
         }
-
         return reviewResults;
     }
 }

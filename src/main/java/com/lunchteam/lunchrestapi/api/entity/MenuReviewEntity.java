@@ -43,11 +43,13 @@ public class MenuReviewEntity {
     public MenuReviewEntity(
         Long menuId,
         Long insertMemberId,
+        Long fileId,
         int star,
         String contents
     ) {
         this.menuId = menuId;
         this.insertMemberId = insertMemberId;
+        this.fileId = fileId;
         this.star = star;
         this.contents = contents;
         this.useYn = "Y";

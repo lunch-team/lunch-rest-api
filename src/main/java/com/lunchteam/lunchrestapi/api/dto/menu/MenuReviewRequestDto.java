@@ -16,6 +16,7 @@ public class MenuReviewRequestDto {
     private String contents;
     private Long menuId;
     private Long memberId;
+    private Long fileId;
     private int star;
 
     // 정렬 타입 (recent, star)

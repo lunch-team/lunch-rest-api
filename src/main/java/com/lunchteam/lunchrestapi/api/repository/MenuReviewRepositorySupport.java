@@ -41,6 +41,7 @@ public class MenuReviewRepositorySupport extends QuerydslRepositorySupport {
                     MenuReviewResult.class,
                     qMenuReviewEntity.id,
                     qMenuReviewEntity.menuId,
+                    qMenuReviewEntity.fileId,
                     qMenuReviewEntity.contents,
                     qMenuReviewEntity.insertDateTime,
                     qMenuReviewEntity.insertMemberId,

@@ -14,6 +14,7 @@ public class MenuReviewResult {
 
     private Long id;
     private Long menuId;
+    private Long fileId;
     private Long insertMemberId;
     private int star;
     private String contents;
