@@ -1,22 +1,29 @@
 package com.lunchteam.lunchrestapi.api.service;
 
 import com.lunchteam.lunchrestapi.api.dto.OrderEnum;
+import com.lunchteam.lunchrestapi.api.dto.file.FileRequestDto;
+import com.lunchteam.lunchrestapi.api.dto.file.FileResult;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuModifyRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuResponseDto;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuResult;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuReviewRequestDto;
+import com.lunchteam.lunchrestapi.api.dto.menu.MenuReviewResult;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuTypeRequestDto;
 import com.lunchteam.lunchrestapi.api.entity.MenuEntity;
 import com.lunchteam.lunchrestapi.api.entity.MenuLogEntity;
 import com.lunchteam.lunchrestapi.api.entity.MenuReviewEntity;
+import com.lunchteam.lunchrestapi.api.exception.MenuException;
 import com.lunchteam.lunchrestapi.api.mapper.MenuMapper;
+import com.lunchteam.lunchrestapi.api.repository.FileRepositorySupport;
 import com.lunchteam.lunchrestapi.api.repository.MenuLogRepository;
 import com.lunchteam.lunchrestapi.api.repository.MenuRepository;
 import com.lunchteam.lunchrestapi.api.repository.MenuRepositorySupport;
 import com.lunchteam.lunchrestapi.api.repository.MenuReviewRepository;
+import com.lunchteam.lunchrestapi.api.repository.MenuReviewRepositorySupport;
 import com.lunchteam.lunchrestapi.api.repository.MenuTypeRepository;
 import com.lunchteam.lunchrestapi.api.response.StatusEnum;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +42,8 @@ public class MenuService {
     private final MenuLogRepository menuLogRepository;
     private final MenuRepositorySupport menuRepositorySupport;
     private final MenuReviewRepository menuReviewRepository;
+    private final MenuReviewRepositorySupport menuReviewRepositorySupport;
+    private final FileRepositorySupport fileRepositorySupport;
     private final MenuMapper menuMapper;
 
     /**
@@ -244,5 +253,36 @@ public class MenuService {
         MenuReviewEntity reviewResult = menuReviewRepository.save(menuReview);
         log.info("registerReview result: " + reviewResult.getId());
         return reviewResult.getId() > 0 ? StatusEnum.SUCCESS : StatusEnum.BAD_REQUEST;
+    }
+
+    @Transactional
+    public List<MenuReviewResult> getReviewList(MenuReviewRequestDto menuDto) {
+        if (!menuRepository.existsById(menuDto.getMenuId())) {
+            throw new MenuException(menuDto.getMenuId());
+        }
+        List<MenuReviewResult> reviewResults = menuReviewRepositorySupport.getReviewList(menuDto);
+        FileRequestDto fileDto = new FileRequestDto();
+        fileDto.setTargetId(menuDto.getMenuId());
+        List<FileResult> fileResults = fileRepositorySupport.getFileList(fileDto);
+
+        log.info(reviewResults.toString());
+        log.info(fileResults.toString());
+
+        for(MenuReviewResult menuReviewResult : reviewResults) {
+            Long reviewId = menuReviewResult.getId();
+            log.debug("reviewId: " + reviewId);
+            List<FileResult> tmpFileList = new ArrayList<>();
+            for (FileResult file : fileResults) {
+                log.debug("targetId: " + file.getTargetId());
+                if(reviewId.equals(file.getTargetId())) {
+                    tmpFileList.add(file);
+                }
+            }
+            if(!tmpFileList.isEmpty()) {
+                menuReviewResult.setFiles(tmpFileList);
+            }
+        }
+
+        return reviewResults;
     }
 }

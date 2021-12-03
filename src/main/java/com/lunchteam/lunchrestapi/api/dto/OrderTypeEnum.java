@@ -3,6 +3,7 @@ package com.lunchteam.lunchrestapi.api.dto;
 public enum OrderTypeEnum {
     ABC("abc"),
     RECENT("recent"),
+    STAR("star"),
     COUNT("count") ;
 
     private final String value;

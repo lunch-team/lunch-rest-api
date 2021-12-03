@@ -3,8 +3,10 @@ package com.lunchteam.lunchrestapi.api.dto.file;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
+@ToString
 @NoArgsConstructor
 public class FileResult {
 

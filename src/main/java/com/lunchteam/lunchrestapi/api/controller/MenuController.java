@@ -4,7 +4,9 @@ import com.lunchteam.lunchrestapi.api.dto.menu.MenuModifyRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuResponseDto;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuReviewRequestDto;
+import com.lunchteam.lunchrestapi.api.dto.menu.MenuReviewResult;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuTypeRequestDto;
+import com.lunchteam.lunchrestapi.api.exception.MenuException;
 import com.lunchteam.lunchrestapi.api.response.BasicResponse;
 import com.lunchteam.lunchrestapi.api.response.ErrorResponse;
 import com.lunchteam.lunchrestapi.api.response.StatusEnum;
@@ -277,6 +279,21 @@ public class MenuController {
         try {
             StatusEnum result = menuService.registerReview(menuDto);
             return ResultHandler.setResult(result, HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PostMapping("/getReviewList")
+    public ResponseEntity<? extends BasicResponse> getReviewList(
+        @RequestBody MenuReviewRequestDto menuDto
+    ) {
+        try {
+            List<MenuReviewResult> results = menuService.getReviewList(menuDto);
+            return ResultHandler.setResult(results, HttpStatus.NOT_FOUND);
+        } catch (MenuException me) {
+            return ResponseEntity.notFound().build();
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
