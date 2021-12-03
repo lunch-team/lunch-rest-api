@@ -224,7 +224,7 @@ public class FileService {
                 throw new FileDownloadException("Could not find file : " + storedFileName);
             }
         } catch (MalformedURLException e) {
-            throw new FileDownloadException("Could not find file : " + storedFileName, e);
+            throw new FileDownloadException("Could not find file : " + storedFileName);
         }
     }
 
