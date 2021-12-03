@@ -285,6 +285,12 @@ public class MenuController {
         }
     }
 
+    /**
+     * 리뷰 가져오기
+     *
+     * @param menuDto menuId
+     * @return list
+     */
     @PostMapping("/getReviewList")
     public ResponseEntity<? extends BasicResponse> getReviewList(
         @RequestBody MenuReviewRequestDto menuDto
