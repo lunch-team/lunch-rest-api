@@ -15,6 +15,8 @@ import org.springframework.core.io.Resource;
 @Builder
 public class FileResponseDto {
 
+    private Long id;
+
     // originalFileName
     private String fileName;
 
@@ -41,6 +43,7 @@ public class FileResponseDto {
 
     private static FileResponseDto allOf(FileResult file) {
         return FileResponseDto.builder()
+            .id(file.getId())
             .fileName(file.getOriginalFileName())
             .fileKey(file.getStoredFileName())
             .fileExtension(file.getFileExtension())

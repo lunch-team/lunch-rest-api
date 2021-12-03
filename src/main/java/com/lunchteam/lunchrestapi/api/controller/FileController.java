@@ -32,6 +32,12 @@ public class FileController {
 
     private final FileService fileService;
 
+    /**
+     * 파일 업로드
+     *
+     * @param fileRequestDto files
+     * @return fileEntity
+     */
     @PostMapping("/upload")
     public ResponseEntity<? extends BasicResponse> uploadFiles(
         FileRequestDto fileRequestDto
@@ -64,6 +70,13 @@ public class FileController {
         }
     }
 
+    /**
+     * 다운로드 파일
+     *
+     * @param fileRequestDto fileKey
+     * @param request        request
+     * @return Resource
+     */
     @PostMapping("/downloadFile")
     public ResponseEntity<Resource> downloadFile(
         @RequestBody FileRequestDto fileRequestDto, HttpServletRequest request
@@ -92,6 +105,12 @@ public class FileController {
         }
     }
 
+    /**
+     * 파일 리스트 가져오기
+     *
+     * @param fileRequestDto targetId
+     * @return List
+     */
     @PostMapping("/getFileList")
     public ResponseEntity<? extends BasicResponse> getFileList(
         @RequestBody FileRequestDto fileRequestDto
@@ -106,17 +125,22 @@ public class FileController {
         }
     }
 
-
+    /**
+     * 파일 삭제
+     *
+     * @param fileRequestDto id
+     * @return 204
+     */
     @PostMapping("/delete")
     public ResponseEntity<? extends BasicResponse> deleteFile(
         @RequestBody FileRequestDto fileRequestDto
     ) {
         try {
             if (fileService.fileDelete(fileRequestDto)) {
-                log.debug("Delete File: " + fileRequestDto.getFileKey());
+                log.debug("Delete File: " + fileRequestDto.getId());
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
             } else {
-                log.warn("Not Found File Key: " + fileRequestDto.getFileKey());
+                log.warn("Not Found File Id: " + fileRequestDto.getId());
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
         } catch (Exception e) {

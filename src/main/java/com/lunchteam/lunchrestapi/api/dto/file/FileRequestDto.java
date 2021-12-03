@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 public class FileRequestDto {
 
+    private Long id;
     private Long memberId;
     private Long targetId;
     private String fileKey;

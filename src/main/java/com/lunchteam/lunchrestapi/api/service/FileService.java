@@ -238,6 +238,12 @@ public class FileService {
         return fileRepositorySupport.deleteFile(file) > 0L;
     }
 
+    /**
+     * get File List
+     *
+     * @param fileRequestDto id
+     * @return List
+     */
     public List<FileResult> getFileListByTargetId(FileRequestDto fileRequestDto) {
         return fileRepositorySupport.getFileList(fileRequestDto);
     }
