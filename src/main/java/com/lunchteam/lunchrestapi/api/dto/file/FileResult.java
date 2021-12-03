@@ -13,6 +13,8 @@ public class FileResult {
     private Long id;
     private Long targetId;
     private Long insertMemberId;
+    private Long groupId;
+    private int fileNo;
 
     private Long fileSize;
     private String fileExtension;

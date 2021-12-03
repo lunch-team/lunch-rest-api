@@ -41,9 +41,11 @@ public class FileController {
             HashMap<String, Long> params = new HashMap<>();
             params.put("targetId", fileRequestDto.getTargetId());
             params.put("memberId", fileRequestDto.getMemberId());
+            params.put("groupId", System.currentTimeMillis());
 
             List<FileEntity> list = new ArrayList<>();
             for (int i = 0; i < fileRequestDto.getFiles().length; i++) {
+                params.put("fileNo", (long) i);
                 list.add(fileService.storeFile(fileRequestDto.getFiles()[i], params));
             }
 
@@ -54,7 +56,7 @@ public class FileController {
                 for (FileEntity file : list) {
                     log.debug("File Upload is Complete: " + file.getOriginalFileName());
                 }
-                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+                return ResultHandler.setResult(list, HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
             e.printStackTrace();

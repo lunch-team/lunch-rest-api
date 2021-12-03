@@ -29,6 +29,8 @@ public class FileResponseDto {
     private String fileType;
 
     private Long targetId;
+    private Long groupId;
+    private int fileNo;
 
     private LocalDateTime insertDateTime;
 
@@ -44,6 +46,8 @@ public class FileResponseDto {
             .fileExtension(file.getFileExtension())
             .fileType(file.getFileType())
             .targetId(file.getTargetId())
+            .groupId(file.getGroupId())
+            .fileNo(file.getFileNo())
             .insertDateTime(file.getInsertDateTime())
             .updateDateTime(file.getUpdateDateTime())
             .build();

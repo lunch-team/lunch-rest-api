@@ -35,6 +35,8 @@ public class FileRepositorySupport extends QuerydslRepositorySupport {
                     FileResult.class,
                     qFileEntity.id,
                     qFileEntity.targetId,
+                    qFileEntity.groupId,
+                    qFileEntity.fileNo,
                     qFileEntity.storedFileName,
                     qFileEntity.originalFileName,
                     qFileEntity.fileExtension,

@@ -180,6 +180,8 @@ public class FileService {
             FileEntity fileEntity = FileEntity.StoreFile()
                 .targetId(params.get("targetId"))
                 .memberId(params.get("memberId"))
+                .groupId(params.get("groupId"))
+                .fileNo(params.get("fileNo").intValue())
                 .storedFileName(storedFileName)
                 .storedFilePath(fileLocation.toString())
                 .originalFileName(fileName)
