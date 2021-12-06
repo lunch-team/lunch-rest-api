@@ -50,7 +50,7 @@ public class MenuService {
      * 메뉴 추가
      *
      * @param menuRequestDto location, name, menuType
-     * @return StatusEnum 204
+     * @return StatusEnum 200
      */
     @Transactional
     public StatusEnum addMenu(MenuRequestDto menuRequestDto) {
@@ -95,7 +95,7 @@ public class MenuService {
      * 메뉴 수정
      *
      * @param menuModifyRequestDto id, name, location, menuType
-     * @return StatusEnum 204
+     * @return StatusEnum 200
      */
     @Transactional
     public StatusEnum modifyMenu(MenuModifyRequestDto menuModifyRequestDto) {
@@ -153,7 +153,7 @@ public class MenuService {
      * 메뉴 타입 추가
      *
      * @param menuTypeRequestDto menuName, menuType
-     * @return StatusEnum 204
+     * @return StatusEnum 200
      */
     @Transactional
     public StatusEnum addMenuType(MenuTypeRequestDto menuTypeRequestDto) {
@@ -213,7 +213,7 @@ public class MenuService {
      * 방문 로그 삭제
      *
      * @param menuModifyRequestDto id
-     * @return 204
+     * @return 200
      */
     @Transactional
     public StatusEnum updateMenuLog(MenuModifyRequestDto menuModifyRequestDto) {
@@ -233,7 +233,7 @@ public class MenuService {
      * 리뷰 등록
      *
      * @param menuDto contents, menuId, memberId, star
-     * @return 204
+     * @return 200
      */
     @Transactional
     public StatusEnum registerReview(MenuReviewRequestDto menuDto) {
@@ -302,7 +302,7 @@ public class MenuService {
      * 리뷰 삭제
      *
      * @param menuDto id
-     * @return 204
+     * @return 200
      */
     @Transactional
     public StatusEnum removeReview(MenuReviewRequestDto menuDto) {

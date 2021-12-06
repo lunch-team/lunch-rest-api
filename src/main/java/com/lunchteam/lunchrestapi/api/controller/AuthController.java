@@ -42,7 +42,7 @@ public class AuthController {
         }
 
         return error == null
-            ? ResponseEntity.noContent().build()
+            ? ResponseEntity.ok().build()
             : ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(error));
     }
 

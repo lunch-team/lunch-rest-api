@@ -129,7 +129,7 @@ public class FileController {
      * 파일 삭제
      *
      * @param fileRequestDto id
-     * @return 204
+     * @return 200
      */
     @PostMapping("/delete")
     public ResponseEntity<? extends BasicResponse> deleteFile(
@@ -138,7 +138,7 @@ public class FileController {
         try {
             if (fileService.fileDelete(fileRequestDto)) {
                 log.debug("Delete File: " + fileRequestDto.getFileKey());
-                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+                return ResponseEntity.status(HttpStatus.OK).build();
             } else {
                 log.warn("Not Found File Id: " + fileRequestDto.getFileKey());
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

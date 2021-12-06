@@ -39,7 +39,7 @@ public class MenuController {
      *
      * @param menuRequestDto location, name, menuType
      * @param errors         Valid
-     * @return 204
+     * @return 200
      */
     @PostMapping("/addMenu")
     public ResponseEntity<? extends BasicResponse> addMenu(
@@ -106,7 +106,7 @@ public class MenuController {
      *
      * @param menuModifyRequestDto id, name, location, menuType
      * @param errors               Valid
-     * @return 204
+     * @return 200
      */
     @PostMapping("/modifyMenu")
     public ResponseEntity<? extends BasicResponse> modifyMenu(
@@ -133,7 +133,7 @@ public class MenuController {
      * 메뉴 삭제
      *
      * @param menuModifyRequestDto id
-     * @return 204
+     * @return 200
      */
     @PostMapping("/deleteMenu")
     public ResponseEntity<? extends BasicResponse> deleteMenu(
@@ -196,7 +196,7 @@ public class MenuController {
      * 메뉴 타입 추가
      *
      * @param menuTypeRequestDto menuName, menuType
-     * @return 204
+     * @return 200
      */
     @PostMapping("/addMenuType")
     public ResponseEntity<? extends BasicResponse> addMenuType(
@@ -232,7 +232,7 @@ public class MenuController {
      * 방문 로그 삭제
      *
      * @param menuModifyRequestDto id
-     * @return 204
+     * @return 200
      */
     @PostMapping("/deleteMenuLog")
     public ResponseEntity<? extends BasicResponse> deleteMenuLog(
@@ -251,7 +251,7 @@ public class MenuController {
      * 방문 로그 삭제
      *
      * @param menuModifyRequestDto id
-     * @return 204
+     * @return 200
      */
     @PostMapping("/updateMenuLog")
     public ResponseEntity<? extends BasicResponse> updateMenuLog(
@@ -270,7 +270,7 @@ public class MenuController {
      * 리뷰 등록
      *
      * @param menuDto contents, menuId, memberId, star
-     * @return 204
+     * @return 200
      */
     @PostMapping("/registerReview")
     public ResponseEntity<? extends BasicResponse> registerReview(
@@ -310,7 +310,7 @@ public class MenuController {
      * 메뉴 리뷰 삭제
      *
      * @param menuDto id
-     * @return 204
+     * @return 200
      */
     @PostMapping("/removeReview")
     public ResponseEntity<? extends BasicResponse> removeReview(

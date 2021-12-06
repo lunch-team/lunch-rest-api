@@ -20,7 +20,7 @@ public class ResultHandler {
             // result is error message
             log.debug("return Status Enum");
             return result == StatusEnum.SUCCESS
-                ? ResponseEntity.noContent().build()
+                ? ResponseEntity.ok().build()
                 : ResponseEntity.status(errorStatus)
                     .body(new ErrorResponse(((StatusEnum) result).get()));
         } else if (result instanceof List || result instanceof BasicResponseDto) {
