@@ -58,7 +58,7 @@ public class FileRepositorySupport extends QuerydslRepositorySupport {
         return queryFactory.update(qFileEntity)
             .set(qFileEntity.updateDateTime, LocalDateTime.now())
             .set(qFileEntity.useYn, "N")
-            .where(qFileEntity.id.eq(fileRequestDto.getId()))
+            .where(qFileEntity.storedFileName.eq(fileRequestDto.getFileKey()))
             .execute();
     }
 }

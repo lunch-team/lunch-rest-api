@@ -137,10 +137,10 @@ public class FileController {
     ) {
         try {
             if (fileService.fileDelete(fileRequestDto)) {
-                log.debug("Delete File: " + fileRequestDto.getId());
+                log.debug("Delete File: " + fileRequestDto.getFileKey());
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
             } else {
-                log.warn("Not Found File Id: " + fileRequestDto.getId());
+                log.warn("Not Found File Id: " + fileRequestDto.getFileKey());
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
         } catch (Exception e) {
