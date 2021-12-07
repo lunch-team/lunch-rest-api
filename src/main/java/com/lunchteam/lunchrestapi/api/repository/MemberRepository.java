@@ -14,7 +14,7 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
      * @param email email
      * @return member
      */
-    Optional<MemberEntity> findByEmail(String email);
+    Optional<MemberEntity> findByEmailAndDelYn(String email, String delYn);
 
     /**
      * LoginId로 유저 정보 가져오기
@@ -23,6 +23,7 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
      * @return member info
      */
     Optional<MemberEntity> findByLoginId(String loginId);
+    Optional<MemberEntity> findByLoginIdAndDelYn(String loginId, String delYn);
 
     /**
      * 중복가입방지
@@ -30,7 +31,7 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
      * @param email email
      * @return bool
      */
-    boolean existsByEmail(String email);
+    boolean existsByEmailAndDelYn(String email, String delYn);
 
     /**
      * login id 중복 체크
@@ -38,5 +39,5 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
      * @param loginId loginId
      * @return bool
      */
-    boolean existsByLoginId(String loginId);
+    boolean existsByLoginIdAndDelYn(String loginId, String delYn);
 }

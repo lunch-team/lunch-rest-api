@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AuthService {
 
+    private final String DEL_YN = "N";
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
@@ -34,11 +35,11 @@ public class AuthService {
             return "invalid_login_id";
         }
 
-        if (memberRepository.existsByEmail(memberRequestDto.getEmail())) {
+        if (memberRepository.existsByEmailAndDelYn(memberRequestDto.getEmail(), DEL_YN)) {
             return "exist_email";
         }
 
-        if (memberRepository.existsByLoginId(memberRequestDto.getLoginId())) {
+        if (memberRepository.existsByLoginIdAndDelYn(memberRequestDto.getLoginId(), DEL_YN)) {
             return "exist_login_id";
         }
 
@@ -107,6 +108,8 @@ public class AuthService {
 
     @Transactional
     public MemberEntity getMemberInfo(MemberRequestDto memberRequestDto) {
-        return memberRepository.findByLoginId(memberRequestDto.getLoginId()).orElse(null);
+        return memberRepository
+            .findByLoginIdAndDelYn(memberRequestDto.getLoginId(), DEL_YN)
+            .orElse(null);
     }
 }
