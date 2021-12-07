@@ -4,6 +4,8 @@ import com.lunchteam.lunchrestapi.api.dto.member.MemberRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.member.MemberResponseDto;
 import com.lunchteam.lunchrestapi.api.repository.MemberRepositorySupport;
 import com.lunchteam.lunchrestapi.security.SecurityUtil;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -41,32 +43,39 @@ public class MemberService {
     }
 
     @Transactional
-    public String findPw(MemberRequestDto memberRequestDto) {
+    public Map<String, Object> findPw(MemberRequestDto memberRequestDto) {
 
         MemberResponseDto memberResponseDto = memberRepositorySupport
             .findByEmailAndLoginId(memberRequestDto)
             .map(MemberResponseDto::of)
             .orElseGet(this::returnNull);
 
+        Map<String, Object> resultMap = new HashMap<>();
         if(memberResponseDto == null) {
             log.warn("no member info");
-            return "no_member_info";
+            resultMap.put("errMsg", "no_member_info");
+        } else {
+            resultMap.put("memberId", memberResponseDto.getId());
         }
 
-        return memberResponseDto.getLoginId();
+        return resultMap;
     }
 
     @Transactional
-    public String resetPassword(MemberRequestDto memberRequestDto) {
+    public Map<String, Object> resetPassword(MemberRequestDto memberRequestDto) {
 
-        MemberResponseDto memberResponseDto = memberRepositorySupport
-            .updatePasswordByLoginId(memberRequestDto)
-            .map(MemberResponseDto::of)
-            .orElse(null);
+        Long result = memberRepositorySupport
+            .updatePasswordByLoginId(memberRequestDto);
 
-        // TODO: password reset
-        assert memberResponseDto != null;
-        return memberResponseDto.getEmail();
+        Map<String, Object> resultMap = new HashMap<>();
+        if(result > 0) {
+            resultMap.put("loginId", memberRequestDto.getLoginId());
+        } else {
+            log.warn("no member info");
+            resultMap.put("errMsg", "no_member_info");
+        }
+
+        return resultMap;
     }
 
     private MemberResponseDto returnNull() {

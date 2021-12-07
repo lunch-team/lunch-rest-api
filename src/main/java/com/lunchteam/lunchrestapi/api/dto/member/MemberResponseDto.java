@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MemberResponseDto extends BasicResponseDto {
 
+    private Long id;
     private String email;
     private String name;
     private String loginId;
@@ -19,6 +20,7 @@ public class MemberResponseDto extends BasicResponseDto {
 
     public static MemberResponseDto of(MemberEntity member) {
         return new MemberResponseDto(
+            member.getId(),
             member.getEmail(),
             member.getName(),
             member.getLoginId(),

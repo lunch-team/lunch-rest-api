@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,12 +17,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberRepositorySupport extends QuerydslRepositorySupport {
 
     private final JPAQueryFactory queryFactory;
+    private final PasswordEncoder passwordEncoder;
 
     QMemberEntity qMemberEntity = QMemberEntity.memberEntity;
 
-    public MemberRepositorySupport(JPAQueryFactory queryFactory) {
+    public MemberRepositorySupport(JPAQueryFactory queryFactory,
+        PasswordEncoder passwordEncoder) {
         super(MemberEntity.class);
         this.queryFactory = queryFactory;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
@@ -40,7 +44,7 @@ public class MemberRepositorySupport extends QuerydslRepositorySupport {
         List<MemberEntity> list = queryFactory.selectFrom(qMemberEntity)
             .where(
                 qMemberEntity.delYn.eq("N")
-       )
+            )
             .fetch();
         return list.stream().findFirst();
     }
@@ -57,6 +61,7 @@ public class MemberRepositorySupport extends QuerydslRepositorySupport {
         return list.stream().findFirst();
     }
 
+    @Transactional
     public Optional<MemberEntity> findByEmailAndLoginId(MemberRequestDto memberRequestDto) {
         List<MemberEntity> list = queryFactory.selectFrom(qMemberEntity)
             .where(
@@ -68,13 +73,16 @@ public class MemberRepositorySupport extends QuerydslRepositorySupport {
         return list.stream().findFirst();
     }
 
-    public Optional<MemberEntity> updatePasswordByLoginId(MemberRequestDto memberRequestDto) {
-        queryFactory.update(qMemberEntity)
-            .set(qMemberEntity.password, memberRequestDto.getNewPassword())
+    @Transactional
+    public Long updatePasswordByLoginId(MemberRequestDto memberRequestDto) {
+        return queryFactory.update(qMemberEntity)
+            .set(qMemberEntity.password,
+                passwordEncoder.encode(memberRequestDto.getNewPassword()))
             .where(
                 qMemberEntity.loginId.eq(memberRequestDto.getLoginId())
+                    .and(qMemberEntity.email.eq(memberRequestDto.getEmail()))
+                    .and(qMemberEntity.id.eq(memberRequestDto.getMemberId()))
                     .and(qMemberEntity.delYn.eq("N"))
             ).execute();
-        return null;
     }
 }

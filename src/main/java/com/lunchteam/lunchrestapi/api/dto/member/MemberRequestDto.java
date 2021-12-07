@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @NoArgsConstructor
 public class MemberRequestDto {
 
+    private Long memberId;
     @Email(message = "err_email_format")
     private String email;
     @NotBlank(message = "err_login_id_blank")
