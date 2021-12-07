@@ -44,6 +44,7 @@ public class MemberRepositorySupport extends QuerydslRepositorySupport {
         List<MemberEntity> list = queryFactory.selectFrom(qMemberEntity)
             .where(
                 qMemberEntity.delYn.eq("N")
+                    .and(qMemberEntity.id.eq(id))
             )
             .fetch();
         return list.stream().findFirst();
