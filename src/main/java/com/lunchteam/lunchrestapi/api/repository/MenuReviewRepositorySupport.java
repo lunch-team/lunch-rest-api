@@ -3,8 +3,13 @@ package com.lunchteam.lunchrestapi.api.repository;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuReviewRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuReviewResult;
 import com.lunchteam.lunchrestapi.api.entity.MenuReviewEntity;
+import com.lunchteam.lunchrestapi.api.entity.QMemberEntity;
 import com.lunchteam.lunchrestapi.api.entity.QMenuReviewEntity;
+import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.StringPath;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
@@ -21,6 +26,7 @@ public class MenuReviewRepositorySupport extends QuerydslRepositorySupport {
     private final JPAQueryFactory queryFactory;
 
     QMenuReviewEntity qMenuReviewEntity = QMenuReviewEntity.menuReviewEntity;
+    QMemberEntity qMemberEntity = QMemberEntity.memberEntity;
 
     public MenuReviewRepositorySupport(JPAQueryFactory queryFactory) {
         super(MenuReviewEntity.class);
@@ -29,6 +35,8 @@ public class MenuReviewRepositorySupport extends QuerydslRepositorySupport {
 
     @Transactional
     public List<MenuReviewResult> getReviewList(MenuReviewRequestDto menuDto) {
+        StringPath memberName
+            = Expressions.stringPath("memberName");
         JPAQuery<MenuReviewResult> query = queryFactory
             .select(
                 Projections.fields(
@@ -38,7 +46,12 @@ public class MenuReviewRepositorySupport extends QuerydslRepositorySupport {
                     qMenuReviewEntity.fileId,
                     qMenuReviewEntity.contents,
                     qMenuReviewEntity.insertDateTime,
-                    qMenuReviewEntity.insertMemberId,
+                    ExpressionUtils.as(
+                        JPAExpressions.select(qMemberEntity.name)
+                            .from(qMemberEntity)
+                            .where(qMemberEntity.id.eq(qMenuReviewEntity.insertMemberId))
+                        , memberName
+                    ),
                     qMenuReviewEntity.star
                 )
             ).from(qMenuReviewEntity)

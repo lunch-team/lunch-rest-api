@@ -16,6 +16,7 @@ public class MenuReviewResult {
     private Long menuId;
     private Long fileId;
     private Long insertMemberId;
+    private String memberName;
     private int star;
     private String contents;
     private List<FileResult> files;
