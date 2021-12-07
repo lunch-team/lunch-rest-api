@@ -18,6 +18,15 @@ public class MemberResponseDto extends BasicResponseDto {
     private String groupId;
     private int useCount;
 
+    private void setIdToNull() {
+        this.id = null;
+    }
+
+    public MemberResponseDto removeId(MemberResponseDto dto) {
+        dto.setIdToNull();
+        return dto;
+    }
+
     public static MemberResponseDto of(MemberEntity member) {
         return new MemberResponseDto(
             member.getId(),

@@ -73,9 +73,11 @@ public class AuthController {
     public ResponseEntity<? extends BasicResponse> findId(
         @RequestBody MemberRequestDto memberRequestDto) {
         try {
-            MemberResponseDto memberResponseDto = memberService.findId(memberRequestDto);
-            if (memberResponseDto != null) {
-                return ResponseEntity.ok().body(new CommonResponse<>(memberResponseDto));
+            MemberResponseDto member = memberService.findId(memberRequestDto);
+            if (member != null) {
+                return ResponseEntity
+                    .ok()
+                    .body(new CommonResponse<>(member.removeId(member)));
             } else {
                 throw new AuthenticationException();
             }

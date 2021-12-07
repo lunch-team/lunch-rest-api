@@ -4,6 +4,7 @@ import com.lunchteam.lunchrestapi.api.dto.member.MemberRequestDto;
 import com.lunchteam.lunchrestapi.api.entity.MemberEntity;
 import com.lunchteam.lunchrestapi.api.entity.QMemberEntity;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -79,6 +80,7 @@ public class MemberRepositorySupport extends QuerydslRepositorySupport {
         return queryFactory.update(qMemberEntity)
             .set(qMemberEntity.password,
                 passwordEncoder.encode(memberRequestDto.getNewPassword()))
+            .set(qMemberEntity.updateDateTime, LocalDateTime.now())
             .where(
                 qMemberEntity.loginId.eq(memberRequestDto.getLoginId())
                     .and(qMemberEntity.email.eq(memberRequestDto.getEmail()))
