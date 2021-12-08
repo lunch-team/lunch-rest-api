@@ -22,10 +22,15 @@ public class MenuResponseDto extends BasicResponseDto {
     private String menuType;
     private String menuName;
     private Long visitCount;
+    private Double star;
     private LocalDateTime recentVisit;
     private LocalDateTime insertDateTime;
 
     private static MenuResponseDto of(MenuResult menu) {
+        Double star = menu.getStar();
+        if (star == null) {
+            star = 0.0;
+        }
         return MenuResponseDto.builder()
             .id(menu.getId())
             .location(menu.getLocation())
@@ -34,6 +39,7 @@ public class MenuResponseDto extends BasicResponseDto {
             .menuName(menu.getMenuName())
             .recentVisit(menu.getRecentVisit())
             .visitCount(menu.getVisitCount())
+            .star(Math.round(star * 10) / 10.0)
             .build();
     }
 

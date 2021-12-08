@@ -7,6 +7,7 @@ import com.lunchteam.lunchrestapi.api.entity.MenuEntity;
 import com.lunchteam.lunchrestapi.api.entity.MenuLogEntity;
 import com.lunchteam.lunchrestapi.api.entity.QMenuEntity;
 import com.lunchteam.lunchrestapi.api.entity.QMenuLogEntity;
+import com.lunchteam.lunchrestapi.api.entity.QMenuReviewEntity;
 import com.lunchteam.lunchrestapi.api.entity.QMenuTypeEntity;
 import com.lunchteam.lunchrestapi.util.RandomUtil;
 import com.querydsl.core.types.ExpressionUtils;
@@ -14,6 +15,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.DateTimePath;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -35,6 +37,7 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
     QMenuEntity qMenuEntity = QMenuEntity.menuEntity;
     QMenuTypeEntity qMenuTypeEntity = QMenuTypeEntity.menuTypeEntity;
     QMenuLogEntity qMenuLogEntity = QMenuLogEntity.menuLogEntity;
+    QMenuReviewEntity qMenuReviewEntity = QMenuReviewEntity.menuReviewEntity;
 
     public MenuRepositorySupport(JPAQueryFactory queryFactory) {
         super(MenuEntity.class);
@@ -104,6 +107,8 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
             = Expressions.dateTimePath(LocalDateTime.class, "recentVisit");
         NumberPath<Long> visitCount
             = Expressions.numberPath(Long.class, "visitCount");
+        NumberPath<Double> star
+            = Expressions.numberPath(Double.class, "star");
         JPAQuery<MenuResult> query = queryFactory
             .select(
                 Projections.fields(
@@ -113,6 +118,11 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
                     qMenuEntity.name,
                     qMenuEntity.menuType,
                     qMenuTypeEntity.menuName,
+                    Expressions.as(
+                      JPAExpressions.select(qMenuReviewEntity.star.avg())
+                          .from(qMenuReviewEntity)
+                          .where(qMenuReviewEntity.menuId.eq(qMenuEntity.id)), star
+                    ),
                     ExpressionUtils.as(
                         JPAExpressions.select(qMenuLogEntity.insertDateTime.max())
                             .from(qMenuLogEntity)

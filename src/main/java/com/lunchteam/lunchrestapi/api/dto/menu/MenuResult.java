@@ -15,6 +15,7 @@ public class MenuResult {
     private String menuType;
     private String menuName;
     private Long visitCount;
+    private Double star;
     private LocalDateTime recentVisit;
     private LocalDateTime insertDateTime;
 }
