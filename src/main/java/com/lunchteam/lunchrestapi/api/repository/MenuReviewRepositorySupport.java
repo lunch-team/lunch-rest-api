@@ -46,6 +46,7 @@ public class MenuReviewRepositorySupport extends QuerydslRepositorySupport {
                     qMenuReviewEntity.fileId,
                     qMenuReviewEntity.contents,
                     qMenuReviewEntity.insertDateTime,
+                    qMenuReviewEntity.insertMemberId,
                     ExpressionUtils.as(
                         JPAExpressions.select(qMemberEntity.name)
                             .from(qMemberEntity)

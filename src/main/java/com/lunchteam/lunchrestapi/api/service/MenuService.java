@@ -277,14 +277,10 @@ public class MenuService {
 
         for (MenuReviewResult menuReviewResult : reviewResults) {
             Long fileId = menuReviewResult.getFileId();
-            log.debug("fileId: " + fileId);
             if (fileId != null) {
                 List<FileResult> tmpFileList = new ArrayList<>();
                 for (FileResult file : fileResults) {
-                    log.debug("groupId: " + file.getGroupId());
-                    log.debug("fileid equals getGroupId?" + fileId.equals(file.getGroupId()));
                     if (fileId.equals(file.getGroupId())) {
-                        log.debug("add file");
                         tmpFileList.add(file);
                     }
                 }
