@@ -106,7 +106,7 @@ public class FileController {
     }
 
     /**
-     * 파일 리스트 가져오기
+     * 파일 리스트 조회
      *
      * @param fileRequestDto targetId
      * @return List

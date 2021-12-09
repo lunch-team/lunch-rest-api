@@ -23,4 +23,8 @@ public class MenuReviewRequestDto {
     // 정렬 타입 (recent, star)
     private OrderTypeEnum orderType;
     private OrderEnum order;
+
+    public void setMenuId(Long menuId) {
+        this.menuId = menuId;
+    }
 }

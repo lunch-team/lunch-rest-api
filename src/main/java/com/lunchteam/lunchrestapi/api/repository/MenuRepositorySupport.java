@@ -15,7 +15,6 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.DateTimePath;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberPath;
-import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -119,9 +118,9 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
                     qMenuEntity.menuType,
                     qMenuTypeEntity.menuName,
                     Expressions.as(
-                      JPAExpressions.select(qMenuReviewEntity.star.avg())
-                          .from(qMenuReviewEntity)
-                          .where(qMenuReviewEntity.menuId.eq(qMenuEntity.id)), star
+                        JPAExpressions.select(qMenuReviewEntity.star.avg())
+                            .from(qMenuReviewEntity)
+                            .where(qMenuReviewEntity.menuId.eq(qMenuEntity.id)), star
                     ),
                     ExpressionUtils.as(
                         JPAExpressions.select(qMenuLogEntity.insertDateTime.max())
@@ -242,5 +241,31 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
             .set(qMenuLogEntity.insertDateTime, menuLog.getInsertDateTime())
             .where(qMenuLogEntity.id.eq(menuLog.getId()))
             .execute();
+    }
+
+    @Transactional
+    public MenuResult getMenuDetail(MenuRequestDto menuDto) {
+        NumberPath<Double> star
+            = Expressions.numberPath(Double.class, "star");
+        return queryFactory.select(Projections.fields(
+                MenuResult.class,
+                qMenuEntity.id,
+                qMenuEntity.location,
+                qMenuEntity.name,
+                qMenuEntity.menuType,
+                qMenuTypeEntity.menuName,
+                Expressions.as(
+                    JPAExpressions.select(qMenuReviewEntity.star.avg())
+                        .from(qMenuReviewEntity)
+                        .where(qMenuReviewEntity.menuId.eq(qMenuEntity.id)), star
+                )
+            ))
+            .from(qMenuEntity)
+            .leftJoin(qMenuTypeEntity)
+            .on(qMenuEntity.menuType.eq(qMenuTypeEntity.menuType))
+            .where(qMenuEntity.id.eq(menuDto.getId())
+                .and(qMenuEntity.useYn.eq("Y"))
+            )
+            .fetchFirst();
     }
 }

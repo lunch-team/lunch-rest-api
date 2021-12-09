@@ -62,6 +62,10 @@ public class MenuResponseDto extends BasicResponseDto {
             .build();
     }
 
+    public static MenuResponseDto ofOne(MenuResult menu) {
+        return of(menu);
+    }
+
     /**
      * JPA Repository 를 위한 MenuEntity to ResponseDto
      *

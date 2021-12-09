@@ -17,7 +17,7 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
     Optional<MemberEntity> findByEmailAndDelYn(String email, String delYn);
 
     /**
-     * LoginId로 유저 정보 가져오기
+     * LoginId로 유저 정보 조회
      *
      * @param loginId login id
      * @return member info

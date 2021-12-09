@@ -66,7 +66,7 @@ public class MenuService {
     }
 
     /**
-     * 랜덤 메뉴 가져오기
+     * 랜덤 메뉴 조회
      *
      * @param menuRequestDto randomNumber, menuType(include 'all')
      * @return List
@@ -81,7 +81,7 @@ public class MenuService {
     }
 
     /**
-     * 모든 메뉴 가져오기
+     * 모든 메뉴 조회
      *
      * @param menuRequestDto menuType, order
      * @return List
@@ -165,7 +165,7 @@ public class MenuService {
     }
 
     /**
-     * 메뉴 타입 가져오기
+     * 메뉴 타입 조회
      *
      * @return List
      */
@@ -175,7 +175,7 @@ public class MenuService {
     }
 
     /**
-     * 방문 로그 가져오기
+     * 방문 로그 조회
      *
      * @param menuRequestDto order(ASC, DESC)
      * @return List
@@ -257,7 +257,7 @@ public class MenuService {
     }
 
     /**
-     * 리뷰 가져오기
+     * 리뷰 조회
      *
      * @param menuDto menuId
      * @return list
@@ -303,10 +303,18 @@ public class MenuService {
     @Transactional
     public StatusEnum removeReview(MenuReviewRequestDto menuDto) {
         if (!menuReviewRepository.existsById(menuDto.getId())) {
-            return StatusEnum.NOT_FOUND;
+            return StatusEnum.NO_MENU;
         }
         long result = menuReviewRepositorySupport.deleteMenuReview(menuDto);
         log.info("deleteMenuReview result: " + result);
         return result > 0 ? StatusEnum.SUCCESS : StatusEnum.NO_MENU;
+    }
+
+    @Transactional
+    public MenuResult getMenuDetail(MenuRequestDto menuDto) {
+        if (!menuRepository.existsById(menuDto.getId())) {
+            throw new MenuException(StatusEnum.NO_MENU);
+        }
+        return menuRepositorySupport.getMenuDetail(menuDto);
     }
 }

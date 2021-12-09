@@ -13,6 +13,7 @@ import com.lunchteam.lunchrestapi.api.response.StatusEnum;
 import com.lunchteam.lunchrestapi.api.service.MenuService;
 import com.lunchteam.lunchrestapi.handler.ErrorHandler;
 import com.lunchteam.lunchrestapi.handler.ResultHandler;
+import java.util.HashMap;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -61,7 +62,7 @@ public class MenuController {
     }
 
     /**
-     * 랜덤 메뉴 가져오기
+     * 랜덤 메뉴 조회
      *
      * @param menuRequestDto randomNumber, menuType(include 'all')
      * @return List
@@ -82,7 +83,7 @@ public class MenuController {
     }
 
     /**
-     * 모든 메뉴 가져오기
+     * 모든 메뉴 조회
      *
      * @param menuRequestDto menuType, order
      * @return List
@@ -95,6 +96,38 @@ public class MenuController {
             List<MenuResponseDto> result =
                 MenuResponseDto.listOfMenuResult(menuService.getAllMenu(menuRequestDto));
             return ResultHandler.setResult(result, HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
+     * 메뉴 상세 정보 조회
+     *
+     * @param menuDto id (menuId)
+     * @return Map
+     */
+    @PostMapping("/getMenuDetail")
+    public ResponseEntity<? extends BasicResponse> getMenuDetail(
+        @RequestBody MenuRequestDto menuDto
+    ) {
+        try {
+            HashMap<String, Object> result = new HashMap<>();
+            MenuResponseDto menuDetail = MenuResponseDto.ofOne(menuService.getMenuDetail(menuDto));
+
+            // review 정보를 조회하기 위한 id 세팅
+            MenuReviewRequestDto reviewDto = new MenuReviewRequestDto();
+            reviewDto.setMenuId(menuDto.getId());
+
+            List<MenuReviewResult> menuReview = menuService.getReviewList(reviewDto);
+
+            result.put("menuDetail", menuDetail);
+            result.put("menuReview", menuReview);
+            return ResultHandler.setResult(result, HttpStatus.NOT_FOUND);
+        } catch (MenuException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ErrorResponse((e).getMessage()));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -173,7 +206,7 @@ public class MenuController {
     }
 
     /**
-     * 방문한 메뉴 리스트 가져오기
+     * 방문한 메뉴 리스트 조회
      *
      * @param menuRequestDto order(ASC, DESC)
      * @return List
@@ -212,7 +245,7 @@ public class MenuController {
     }
 
     /**
-     * 메뉴 타입 가져오기
+     * 메뉴 타입 조회
      *
      * @return List
      */
@@ -286,7 +319,7 @@ public class MenuController {
     }
 
     /**
-     * 리뷰 가져오기
+     * 리뷰 조회
      *
      * @param menuDto menuId
      * @return list

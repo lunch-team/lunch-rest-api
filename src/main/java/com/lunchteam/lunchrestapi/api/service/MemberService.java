@@ -25,7 +25,7 @@ public class MemberService {
             .orElseThrow(() -> new RuntimeException("유저 정보가 없습니다."));
     }
 
-    // 현재 SecurityContext 에 있는 유저 정보 가져오기
+    // 현재 SecurityContext 에 있는 유저 정보 조회
     @Transactional(readOnly = true)
     public MemberResponseDto getMyInfo() {
         // 내 정보를 가져올 때는 SecurityUtil.getCurrentMemberId() 사용
