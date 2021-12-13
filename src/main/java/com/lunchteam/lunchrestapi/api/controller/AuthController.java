@@ -79,10 +79,11 @@ public class AuthController {
                     .ok()
                     .body(new CommonResponse<>(member.removeId(member)));
             } else {
-                throw new AuthenticationException();
+                throw new AuthenticationException("error");
             }
         } catch (AuthenticationException e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ErrorResponse(e.getMessage()));
         }
     }
 

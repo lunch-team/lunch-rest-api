@@ -2,6 +2,7 @@ package com.lunchteam.lunchrestapi.api.service;
 
 import com.lunchteam.lunchrestapi.api.dto.member.MemberRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.member.MemberResponseDto;
+import com.lunchteam.lunchrestapi.api.exception.AuthenticationException;
 import com.lunchteam.lunchrestapi.api.repository.MemberRepositorySupport;
 import com.lunchteam.lunchrestapi.security.SecurityUtil;
 import java.util.HashMap;
@@ -22,7 +23,7 @@ public class MemberService {
     public MemberResponseDto getMemberInfo(String email) {
         return memberRepositorySupport.findByEmail(email)
             .map(MemberResponseDto::of)
-            .orElseThrow(() -> new RuntimeException("유저 정보가 없습니다."));
+            .orElseThrow(() -> new AuthenticationException("유저 정보가 없습니다."));
     }
 
     // 현재 SecurityContext 에 있는 유저 정보 조회
@@ -31,7 +32,7 @@ public class MemberService {
         // 내 정보를 가져올 때는 SecurityUtil.getCurrentMemberId() 사용
         return memberRepositorySupport.findById(SecurityUtil.getCurrentMemberId())
             .map(MemberResponseDto::of)
-            .orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다."));
+            .orElseThrow(() -> new AuthenticationException("로그인 유저 정보가 없습니다."));
     }
 
     @Transactional
@@ -39,7 +40,7 @@ public class MemberService {
 
         return memberRepositorySupport.findByEmailAndName(memberRequestDto)
             .map(MemberResponseDto::of)
-            .orElseThrow(() -> new RuntimeException("유저 정보가 없습니다."));
+            .orElseThrow(() -> new AuthenticationException("유저 정보가 없습니다."));
     }
 
     @Transactional
