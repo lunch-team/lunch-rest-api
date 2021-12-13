@@ -145,23 +145,30 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
         query.leftJoin(qMenuTypeEntity)
             .on(qMenuEntity.menuType.eq(qMenuTypeEntity.menuType));
 
+        final String orderType = menuRequestDto.getOrderType().getValue();
+        final String order = menuRequestDto.getOrder().getValue();
         // 정렬 타입
-        if ("recent".equalsIgnoreCase(menuRequestDto.getOrderType().getValue())) {
+        if ("recent".equalsIgnoreCase(orderType)) {
             // 정렬 순서
-            if ("DESC".equalsIgnoreCase(menuRequestDto.getOrder().getValue())) {
+            if ("DESC".equalsIgnoreCase(order)) {
                 query.orderBy(recentVisit.desc());
             } else {
                 query.orderBy(recentVisit.asc());
             }
-        } else if ("count".equalsIgnoreCase(menuRequestDto.getOrderType().getValue())) {
-            if ("DESC".equalsIgnoreCase(menuRequestDto.getOrder().getValue())) {
+        } else if ("count".equalsIgnoreCase(orderType)) {
+            if ("DESC".equalsIgnoreCase(order)) {
                 query.orderBy(visitCount.desc());
             } else {
                 query.orderBy(visitCount.asc());
             }
         }
         // 항상 ABC 순
-        query.orderBy(qMenuEntity.name.asc());
+        if ("abc".equals(orderType)
+            && "DESC".equalsIgnoreCase(order)) {
+            query.orderBy(qMenuEntity.name.desc());
+        } else {
+            query.orderBy(qMenuEntity.name.asc());
+        }
 
         return query.fetch();
     }
