@@ -82,7 +82,7 @@ public class AuthController {
                 throw new AuthenticationException("error");
             }
         } catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(new ErrorResponse(e.getMessage()));
         }
     }
@@ -107,7 +107,7 @@ public class AuthController {
             }
         } catch (AuthenticationException e) {
             return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
+                .status(HttpStatus.UNAUTHORIZED)
                 .body(new ErrorResponse(e.getMessage()));
         }
     }
@@ -126,7 +126,7 @@ public class AuthController {
             }
         } catch (AuthenticationException e) {
             return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
+                .status(HttpStatus.UNAUTHORIZED)
                 .body(new ErrorResponse(e.getMessage()));
         }
     }
