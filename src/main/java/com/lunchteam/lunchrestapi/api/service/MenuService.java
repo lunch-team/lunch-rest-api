@@ -320,11 +320,28 @@ public class MenuService {
         return result > 0 ? StatusEnum.SUCCESS : StatusEnum.NO_MENU;
     }
 
+    /**
+     * 메뉴 상세 정보 조회
+     *
+     * @param menuDto id (menuId)
+     * @return Map
+     */
     @Transactional
     public MenuResult getMenuDetail(MenuRequestDto menuDto) {
         if (!menuRepository.existsById(menuDto.getId())) {
             throw new MenuException(StatusEnum.NO_MENU);
         }
         return menuRepositorySupport.getMenuDetail(menuDto);
+    }
+
+    /**
+     * 메뉴 타입 별 방문수 통계
+     *
+     * @return List
+     */
+    @Transactional
+    public List<MenuResult> getVisitCountGroupByMenuName() {
+        HashMap<String, Object> params = new HashMap<>();
+        return menuMapper.getVisitCountGroupByMenuName(params);
     }
 }

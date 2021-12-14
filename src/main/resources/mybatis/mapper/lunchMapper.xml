@@ -32,4 +32,17 @@
     order by rand()
     limit #{number}
   </select>
+  <select
+    id="getVisitCountGroupByMenuName"
+    resultType="MenuResult"
+    parameterType="java.util.Map">
+    select T.menu_name, count(T.menu_name) as visit_count
+    from (select (select menu_name
+                  from lunch_menu_type lmt
+                  where lm.menu_type = lmt.menu_type) as menu_name
+          from lunch_log ll
+                 left join lunch_menu lm on ll.menu_id = lm.id
+         ) as T
+    group by T.menu_name
+  </select>
 </mapper>

@@ -3,6 +3,7 @@ package com.lunchteam.lunchrestapi.api.controller;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuModifyRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuResponseDto;
+import com.lunchteam.lunchrestapi.api.dto.menu.MenuResult;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuReviewRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuReviewResult;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuTypeRequestDto;
@@ -355,6 +356,22 @@ public class MenuController {
     ) {
         try {
             StatusEnum result = menuService.removeReview(menuDto);
+            return ResultHandler.setResult(result, HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
+     * 메뉴 타입 별 방문수 통계
+     *
+     * @return List
+     */
+    @GetMapping("/statistics/getVisitCount")
+    public ResponseEntity<? extends BasicResponse> getVisitCountGroupByMenuName() {
+        try {
+            List<MenuResult> result = menuService.getVisitCountGroupByMenuName();
             return ResultHandler.setResult(result, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             e.printStackTrace();
