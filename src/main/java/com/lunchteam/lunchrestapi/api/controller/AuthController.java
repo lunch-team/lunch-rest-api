@@ -69,6 +69,22 @@ public class AuthController {
         return ResponseEntity.ok(authService.reissue(tokenRequestDto));
     }
 
+    @PostMapping("/checkId")
+    public ResponseEntity<? extends BasicResponse> checkId(
+        @RequestBody MemberRequestDto memberRequestDto) {
+        try {
+            if (memberService.checkLoginId(memberRequestDto)) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            } else {
+                return ResponseEntity.ok().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .build();
+        }
+    }
+
     @PostMapping("/findId")
     public ResponseEntity<? extends BasicResponse> findId(
         @RequestBody MemberRequestDto memberRequestDto) {

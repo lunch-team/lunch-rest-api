@@ -3,6 +3,7 @@ package com.lunchteam.lunchrestapi.api.service;
 import com.lunchteam.lunchrestapi.api.dto.member.MemberRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.member.MemberResponseDto;
 import com.lunchteam.lunchrestapi.api.exception.AuthenticationException;
+import com.lunchteam.lunchrestapi.api.repository.MemberRepository;
 import com.lunchteam.lunchrestapi.api.repository.MemberRepositorySupport;
 import com.lunchteam.lunchrestapi.security.SecurityUtil;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepositorySupport memberRepositorySupport;
+    private final MemberRepository memberRepository;
 
     @Transactional(readOnly = true)
     public MemberResponseDto getMemberInfo(String email) {
@@ -52,7 +54,7 @@ public class MemberService {
             .orElseGet(this::returnNull);
 
         Map<String, Object> resultMap = new HashMap<>();
-        if(memberResponseDto == null) {
+        if (memberResponseDto == null) {
             log.warn("no member info");
             resultMap.put("errMsg", "no_member_info");
         } else {
@@ -69,7 +71,7 @@ public class MemberService {
             .updatePasswordByLoginId(memberRequestDto);
 
         Map<String, Object> resultMap = new HashMap<>();
-        if(result > 0) {
+        if (result > 0) {
             resultMap.put("loginId", memberRequestDto.getLoginId());
         } else {
             log.warn("no member info");
@@ -77,6 +79,16 @@ public class MemberService {
         }
 
         return resultMap;
+    }
+
+    /**
+     * loginId 중복 체크
+     * @param memberRequestDto loginId
+     * @return boolean
+     */
+    @Transactional
+    public boolean checkLoginId(MemberRequestDto memberRequestDto) {
+        return memberRepository.findByLoginId(memberRequestDto.getLoginId()).isPresent();
     }
 
     private MemberResponseDto returnNull() {
