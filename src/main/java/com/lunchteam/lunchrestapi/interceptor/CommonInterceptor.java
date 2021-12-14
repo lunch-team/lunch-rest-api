@@ -15,7 +15,8 @@ public class CommonInterceptor implements HandlerInterceptor {
         @Nonnull HttpServletResponse response,
         @Nonnull Object handler
     ) throws Exception {
-        log.info("[" + request.getRemoteAddr() + "] [REQ " + request.getMethod() + "] : "
+        log.info("[" + request.getHeader("X-Forwarded-For") + "] "
+            + "[REQ " + request.getMethod() + "] : "
             + request.getRequestURI());
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }
