@@ -259,17 +259,23 @@ public class MenuService {
     /**
      * 리뷰 조회
      *
-     * @param menuDto menuId
+     * @param menuDto menuId or allFlag is true
      * @return list
      */
     @Transactional
     public List<MenuReviewResult> getReviewList(MenuReviewRequestDto menuDto) {
-        if (!menuRepository.existsById(menuDto.getMenuId())) {
-            throw new MenuException(menuDto.getMenuId());
+        if (!menuDto.isAllFlag()) {
+            if (!menuRepository.existsById(menuDto.getMenuId())) {
+                throw new MenuException(menuDto.getMenuId());
+            }
         }
         List<MenuReviewResult> reviewResults = menuReviewRepositorySupport.getReviewList(menuDto);
         FileRequestDto fileDto = new FileRequestDto();
-        fileDto.setTargetId(menuDto.getMenuId());
+        if (!menuDto.isAllFlag()) {
+            fileDto.setTargetId(menuDto.getMenuId());
+        } else {
+            fileDto.setAllFlag(true);
+        }
         List<FileResult> fileResults = fileRepositorySupport.getFileList(fileDto);
 
         log.info(reviewResults.toString());

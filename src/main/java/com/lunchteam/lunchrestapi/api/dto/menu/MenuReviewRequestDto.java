@@ -20,6 +20,8 @@ public class MenuReviewRequestDto {
     private Long fileId;
     private int star;
 
+    private boolean allFlag;
+
     // 정렬 타입 (recent, star)
     private OrderTypeEnum orderType;
     private OrderEnum order;

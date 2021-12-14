@@ -321,7 +321,7 @@ public class MenuController {
     /**
      * 리뷰 조회
      *
-     * @param menuDto menuId
+     * @param menuDto menuId or allFlag is true
      * @return list
      */
     @PostMapping("/getReviewList")

@@ -19,4 +19,5 @@ public class FileRequestDto {
     private Long targetId;
     private String fileKey;
     private MultipartFile[] files;
+    private boolean allFlag;
 }

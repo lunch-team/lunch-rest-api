@@ -56,9 +56,11 @@ public class MenuReviewRepositorySupport extends QuerydslRepositorySupport {
                     qMenuReviewEntity.star
                 )
             ).from(qMenuReviewEntity)
-            .where(qMenuReviewEntity.useYn.eq("Y"))
-            .where(qMenuReviewEntity.menuId.eq(menuDto.getMenuId()))
-            .orderBy(qMenuReviewEntity.insertDateTime.desc());
+            .where(qMenuReviewEntity.useYn.eq("Y"));
+        if (!menuDto.isAllFlag()) {
+            query.where(qMenuReviewEntity.menuId.eq(menuDto.getMenuId()));
+        }
+        query.orderBy(qMenuReviewEntity.insertDateTime.desc());
         return query.fetch();
     }
 

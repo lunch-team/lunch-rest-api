@@ -46,7 +46,10 @@ public class FileRepositorySupport extends QuerydslRepositorySupport {
                     qFileEntity.updateDateTime
                 )
             ).from(qFileEntity)
-            .where(qFileEntity.useYn.eq("Y").and(qFileEntity.targetId.eq(fileDto.getTargetId())));
+            .where(qFileEntity.useYn.eq("Y"));
+        if (!fileDto.isAllFlag()) {
+            query.where(qFileEntity.targetId.eq(fileDto.getTargetId()));
+        }
         // 항상 최신순
         query.orderBy(qFileEntity.insertDateTime.desc());
 
