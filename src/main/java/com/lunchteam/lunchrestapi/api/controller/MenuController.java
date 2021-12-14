@@ -6,6 +6,7 @@ import com.lunchteam.lunchrestapi.api.dto.menu.MenuResponseDto;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuReviewRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuReviewResult;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuTypeRequestDto;
+import com.lunchteam.lunchrestapi.api.exception.AuthenticationException;
 import com.lunchteam.lunchrestapi.api.exception.MenuException;
 import com.lunchteam.lunchrestapi.api.response.BasicResponse;
 import com.lunchteam.lunchrestapi.api.response.ErrorResponse;
@@ -312,6 +313,9 @@ public class MenuController {
         try {
             StatusEnum result = menuService.registerReview(menuDto);
             return ResultHandler.setResult(result, HttpStatus.NOT_FOUND);
+        } catch (AuthenticationException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ErrorResponse(e.getMessage()));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

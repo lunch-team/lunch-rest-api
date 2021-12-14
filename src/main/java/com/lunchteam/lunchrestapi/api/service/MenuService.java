@@ -13,6 +13,7 @@ import com.lunchteam.lunchrestapi.api.dto.menu.MenuTypeRequestDto;
 import com.lunchteam.lunchrestapi.api.entity.MenuEntity;
 import com.lunchteam.lunchrestapi.api.entity.MenuLogEntity;
 import com.lunchteam.lunchrestapi.api.entity.MenuReviewEntity;
+import com.lunchteam.lunchrestapi.api.exception.AuthenticationException;
 import com.lunchteam.lunchrestapi.api.exception.MenuException;
 import com.lunchteam.lunchrestapi.api.mapper.MenuMapper;
 import com.lunchteam.lunchrestapi.api.repository.FileRepositorySupport;
@@ -242,6 +243,9 @@ public class MenuService {
         } else if (menuDto.getStar() > 10 || menuDto.getStar() < 1) {
             log.warn("Invalid Star Range.");
             return StatusEnum.BAD_REQUEST;
+        } else if (menuDto.getMemberId() == null) {
+            log.warn("No Member Id.");
+            throw new AuthenticationException("no_member_id");
         }
 
         MenuReviewEntity menuReview = MenuReviewEntity.RegisterReview()
