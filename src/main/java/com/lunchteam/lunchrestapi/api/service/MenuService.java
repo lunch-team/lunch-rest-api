@@ -340,8 +340,29 @@ public class MenuService {
      * @return List
      */
     @Transactional
-    public List<MenuResult> getVisitCountGroupByMenuName() {
+    public List<Object> getVisitCountGroupByMenuName() {
         HashMap<String, Object> params = new HashMap<>();
         return menuMapper.getVisitCountGroupByMenuName(params);
+    }
+
+    /**
+     * 요일별 메뉴 타입 선호도 통계
+     *
+     * @return Map
+     */
+    public Map<String, Object> getVisitCountGroupByDayOfWeek() {
+        List<MenuResult> MENU_TYPE = menuRepositorySupport.getMenuType();
+        HashMap<String, Object> params = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
+        for (MenuResult item : MENU_TYPE) {
+            String menuType = item.getMenuType();
+            if (!"".equals(menuType)) {
+                params.put("menuType", menuType);
+                result.put(item.getMenuName(), menuMapper.getVisitCountGroupByDayOfWeek(params));
+            } else {
+                log.warn("MenuType is empty.");
+            }
+        }
+        return result;
     }
 }

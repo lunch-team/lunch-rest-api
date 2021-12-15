@@ -34,15 +34,38 @@
   </select>
   <select
     id="getVisitCountGroupByMenuName"
-    resultType="MenuResult"
+    resultType="java.util.Map"
     parameterType="java.util.Map">
-    select T.menu_name, count(T.menu_name) as visit_count
-    from (select (select menu_name
-                  from lunch_menu_type lmt
-                  where lm.menu_type = lmt.menu_type) as menu_name
-          from lunch_log ll
-                 left join lunch_menu lm on ll.menu_id = lm.id
-         ) as T
-    group by T.menu_name
+    select count(menu_id) as visitCount,
+           lmt.menu_name
+    from lunch_log ll
+           join lunch_menu lm on ll.menu_id = lm.id
+           join lunch_menu_type lmt on lm.menu_type = lmt.menu_type
+    group by lm.menu_type
+  </select>
+  <select
+    id="getVisitCountGroupByDayOfWeek"
+    resultType="java.util.Map"
+    parameterType="java.util.Map">
+    select T.visitCount,
+           (
+             select (
+                      case
+                        when T.day = 2 then 'MON'
+                        when T.day = 3 then 'TUE'
+                        when T.day = 4 then 'WED'
+                        when T.day = 5 then 'THU'
+                        when T.day = 6 then 'FRI'
+                        end
+                      )
+           ) as day
+    from (
+           select count(1)                       as visitCount,
+                  dayofweek(ll.insert_date_time) as day
+           from lunch_log ll
+                  join lunch_menu lm on ll.menu_id = lm.id
+           where lm.menu_type = #{menuType}
+           group by dayofweek(ll.insert_date_time)) as T
+    order by T.day
   </select>
 </mapper>

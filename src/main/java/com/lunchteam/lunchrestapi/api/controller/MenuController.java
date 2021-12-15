@@ -17,6 +17,7 @@ import com.lunchteam.lunchrestapi.handler.ErrorHandler;
 import com.lunchteam.lunchrestapi.handler.ResultHandler;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -368,10 +369,26 @@ public class MenuController {
      *
      * @return List
      */
-    @GetMapping("/statistics/getVisitCount")
+    @GetMapping("/statistics/getVisitCountByMenuType")
     public ResponseEntity<? extends BasicResponse> getVisitCountGroupByMenuName() {
         try {
-            List<MenuResult> result = menuService.getVisitCountGroupByMenuName();
+            List<Object> result = menuService.getVisitCountGroupByMenuName();
+            return ResultHandler.setResult(result, HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
+     * 요일별 메뉴 타입 선호도 통계
+     *
+     * @return List
+     */
+    @GetMapping("/statistics/getVisitCountByDayOfWeek")
+    public ResponseEntity<? extends BasicResponse> getVisitCountGroupByDayOfWeek() {
+        try {
+            Map<String, Object> result = menuService.getVisitCountGroupByDayOfWeek();
             return ResultHandler.setResult(result, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             e.printStackTrace();

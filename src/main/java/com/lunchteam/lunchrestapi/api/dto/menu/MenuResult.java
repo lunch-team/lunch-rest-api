@@ -14,6 +14,7 @@ public class MenuResult {
     private String menuId;
     private String menuType;
     private String menuName;
+    private String day;
     private Long visitCount;
     private Double star;
     private LocalDateTime recentVisit;
