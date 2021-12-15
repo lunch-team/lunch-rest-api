@@ -350,6 +350,7 @@ public class MenuService {
      *
      * @return Map
      */
+    @Transactional
     public Map<String, Object> getVisitCountGroupByDayOfWeek() {
         List<MenuResult> MENU_TYPE = menuRepositorySupport.getMenuType();
         HashMap<String, Object> params = new HashMap<>();
@@ -362,6 +363,24 @@ public class MenuService {
             } else {
                 log.warn("MenuType is empty.");
             }
+        }
+        return result;
+    }
+
+    /**
+     * 요일별 메뉴 선호도
+     *
+     * @return List
+     */
+    @Transactional
+    public Map<String, Object> getMenuListByDayOfWeek() {
+        // 2 ~ 6: 월 ~ 금
+        final String[] DAY = {"월", "화", "수", "목", "금"};
+        Map<String, Object> result = new HashMap<>();
+        HashMap<String, Object> params = new HashMap<>();
+        for (int i = 0; i < DAY.length; i++) {
+            params.put("day", i + 2);
+            result.put(DAY[i], menuMapper.getMenuListByDayOfWeek(params));
         }
         return result;
     }

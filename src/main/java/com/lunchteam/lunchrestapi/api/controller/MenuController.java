@@ -3,7 +3,6 @@ package com.lunchteam.lunchrestapi.api.controller;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuModifyRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuResponseDto;
-import com.lunchteam.lunchrestapi.api.dto.menu.MenuResult;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuReviewRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuReviewResult;
 import com.lunchteam.lunchrestapi.api.dto.menu.MenuTypeRequestDto;
@@ -381,7 +380,7 @@ public class MenuController {
     }
 
     /**
-     * 요일별 메뉴 타입 선호도 통계
+     * 요일 별 메뉴 타입 선호도 통계
      *
      * @return List
      */
@@ -389,6 +388,22 @@ public class MenuController {
     public ResponseEntity<? extends BasicResponse> getVisitCountGroupByDayOfWeek() {
         try {
             Map<String, Object> result = menuService.getVisitCountGroupByDayOfWeek();
+            return ResultHandler.setResult(result, HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
+     * 요일 별 메뉴 선호도 통계
+     *
+     * @return List
+     */
+    @GetMapping("/statistics/getMenuListByDayOfWeek")
+    public ResponseEntity<? extends BasicResponse> getMenuListByDayOfWeek() {
+        try {
+            Map<String, Object> result = menuService.getMenuListByDayOfWeek();
             return ResultHandler.setResult(result, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             e.printStackTrace();

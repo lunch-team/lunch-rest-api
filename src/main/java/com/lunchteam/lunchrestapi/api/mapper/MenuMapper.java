@@ -34,4 +34,11 @@ public interface MenuMapper {
      * @return List
      */
     List<Object> getVisitCountGroupByDayOfWeek(HashMap<String, Object> params);
+
+    /**
+     * 요일별 메뉴 선호도
+     *
+     * @return List
+     */
+    List<Object> getMenuListByDayOfWeek(HashMap<String, Object> params);
 }

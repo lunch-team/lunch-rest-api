@@ -68,4 +68,15 @@
            group by dayofweek(ll.insert_date_time)) as T
     order by T.day
   </select>
+  <select
+    id="getMenuListByDayOfWeek"
+    resultType="java.util.Map"
+    parameterType="java.util.Map">
+    select count(1) as visitCount, lm.name
+    from lunch_log ll
+           join lunch_menu lm on ll.menu_id = lm.id
+    where dayofweek(ll.insert_date_time) = #{day}
+    group by menu_id
+    order by visitCount desc
+  </select>
 </mapper>
