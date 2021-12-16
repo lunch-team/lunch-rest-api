@@ -1,7 +1,9 @@
 package com.lunchteam.lunchrestapi.api.dto.member;
 
 import com.lunchteam.lunchrestapi.api.entity.MemberEntity;
+import com.lunchteam.lunchrestapi.api.entity.MemberLogEntity;
 import com.lunchteam.lunchrestapi.security.dto.Authority;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;

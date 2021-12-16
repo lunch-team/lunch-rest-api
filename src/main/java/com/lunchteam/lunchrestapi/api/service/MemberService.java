@@ -83,7 +83,7 @@ public class MemberService {
                 resultMap.put("errMsg", "no_member_info");
             }
         }
-        
+
         return resultMap;
     }
 
@@ -95,7 +95,13 @@ public class MemberService {
      */
     @Transactional
     public boolean checkLoginId(MemberRequestDto memberRequestDto) {
-        return memberRepository.findByLoginId(memberRequestDto.getLoginId()).isPresent();
+        // id validation
+        if(verifyUtil.isValidId(memberRequestDto.getLoginId())) {
+            // id duplicate check
+            return memberRepository.findByLoginId(memberRequestDto.getLoginId()).isPresent();
+        } else {
+            return true;
+        }
     }
 
     private MemberResponseDto returnNull() {

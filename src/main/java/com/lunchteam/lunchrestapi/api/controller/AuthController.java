@@ -9,11 +9,13 @@ import com.lunchteam.lunchrestapi.api.response.CommonResponse;
 import com.lunchteam.lunchrestapi.api.response.ErrorResponse;
 import com.lunchteam.lunchrestapi.api.response.StatusEnum;
 import com.lunchteam.lunchrestapi.api.service.AuthService;
+import com.lunchteam.lunchrestapi.api.service.MemberLogService;
 import com.lunchteam.lunchrestapi.api.service.MemberService;
 import com.lunchteam.lunchrestapi.security.dto.TokenDto;
 import com.lunchteam.lunchrestapi.security.dto.TokenRequestDto;
 import java.util.HashMap;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -30,6 +32,7 @@ public class AuthController {
 
     private final AuthService authService;
     private final MemberService memberService;
+    private final MemberLogService memberLogService;
 
     @PostMapping("/signup")
     public ResponseEntity<? extends BasicResponse> signup(
@@ -49,7 +52,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<HashMap<String, Object>> login(
-        @RequestBody MemberRequestDto memberRequestDto) {
+        @RequestBody MemberRequestDto memberRequestDto, HttpServletRequest request) {
         HashMap<String, Object> resultMap = new HashMap<>();
         resultMap.put("token", authService.login(memberRequestDto));
 
@@ -60,6 +63,7 @@ public class AuthController {
                 .loginId(member.getLoginId())
                 .name(member.getName())
                 .build());
+        memberLogService.logging(member, request);
         return ResponseEntity.ok(resultMap);
     }
 

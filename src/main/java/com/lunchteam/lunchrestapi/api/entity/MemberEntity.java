@@ -9,6 +9,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.servlet.http.HttpServletRequest;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -90,5 +91,20 @@ public class MemberEntity {
         this.delYn = delYn;
         this.useCount = useCount;
         this.authority = authority;
+    }
+
+    public MemberLogEntity toLogging(HttpServletRequest request) {
+        String ip = request.getHeader("X-Real-IP");
+        if (ip == null || "".equals(ip) || "null".equalsIgnoreCase(ip)) {
+            ip = request.getRemoteAddr();
+        }
+        return MemberLogEntity.AddMemberLog()
+            .memberId(id)
+            .ip(ip)
+            .loginId(loginId)
+            .name(name)
+            .userAgent(request.getHeader("User-Agent"))
+            .requestUri(request.getRequestURI())
+            .build();
     }
 }
