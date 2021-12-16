@@ -6,6 +6,7 @@ import com.lunchteam.lunchrestapi.api.exception.AuthenticationException;
 import com.lunchteam.lunchrestapi.api.repository.MemberRepository;
 import com.lunchteam.lunchrestapi.api.repository.MemberRepositorySupport;
 import com.lunchteam.lunchrestapi.security.SecurityUtil;
+import com.lunchteam.lunchrestapi.util.VerifyUtil;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MemberService {
 
+    private final VerifyUtil verifyUtil;
     private final MemberRepositorySupport memberRepositorySupport;
     private final MemberRepository memberRepository;
 
@@ -66,23 +68,28 @@ public class MemberService {
 
     @Transactional
     public Map<String, Object> resetPassword(MemberRequestDto memberRequestDto) {
-
-        Long result = memberRepositorySupport
-            .updatePasswordByLoginId(memberRequestDto);
-
         Map<String, Object> resultMap = new HashMap<>();
-        if (result > 0) {
-            resultMap.put("loginId", memberRequestDto.getLoginId());
-        } else {
-            log.warn("no member info");
-            resultMap.put("errMsg", "no_member_info");
-        }
 
+        if (!verifyUtil.isValidPw(memberRequestDto.getPassword())) {
+            resultMap.put("errMsg", "invalid_password");
+        } else {
+            Long result = memberRepositorySupport
+                .updatePasswordByLoginId(memberRequestDto);
+
+            if (result > 0) {
+                resultMap.put("loginId", memberRequestDto.getLoginId());
+            } else {
+                log.warn("no member info");
+                resultMap.put("errMsg", "no_member_info");
+            }
+        }
+        
         return resultMap;
     }
 
     /**
      * loginId 중복 체크
+     *
      * @param memberRequestDto loginId
      * @return boolean
      */

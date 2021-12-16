@@ -28,11 +28,15 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final VerifyUtil verifyUtil;
 
     @Transactional
     public String signup(MemberRequestDto memberRequestDto) {
-        if (!VerifyUtil.isValidId(memberRequestDto.getLoginId())) {
+        if (!verifyUtil.isValidId(memberRequestDto.getLoginId())) {
             return "invalid_login_id";
+        }
+        if (!verifyUtil.isValidPw(memberRequestDto.getPassword())) {
+            return "invalid_password";
         }
 
         if (memberRepository.existsByEmailAndDelYn(memberRequestDto.getEmail(), DEL_YN)) {
