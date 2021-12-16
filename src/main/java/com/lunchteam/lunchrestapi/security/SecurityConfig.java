@@ -1,5 +1,8 @@
 package com.lunchteam.lunchrestapi.security;
 
+import com.lunchteam.lunchrestapi.property.CorsProperties;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,6 +17,7 @@ import org.springframework.web.cors.CorsUtils;
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private final CorsProperties properties;
     private final TokenProvider tokenProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
@@ -46,6 +50,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        List<String> permitUrl = new ArrayList<>();
+        if (properties.isALL()) {
+            permitUrl.add("/**");
+        } else {
+            permitUrl.add("/auth/**");
+            permitUrl.add("/api/connectionTest");
+            permitUrl.add("/stat/**");
+            permitUrl.add("/chat/**");
+            permitUrl.add("/ws-stomp/**");
+            permitUrl.add("/file/**");
+            permitUrl.add("/menu/get*");
+        }
         // CSRF 설정 Disable
         http.csrf().disable()
 
@@ -72,12 +88,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .requestMatchers(CorsUtils::isPreFlightRequest)
             .permitAll()
             .antMatchers(
-                "/auth/**",
-                "/api/connectionTest",
-                "/menu/**",
-                "/chat/**",
-                "/ws-stomp/**",
-                "/file/**"
+                permitUrl.toArray(new String[0])
             )
             .permitAll()
             .anyRequest().authenticated()   // 나머지 API 는 전부 인증 필요
