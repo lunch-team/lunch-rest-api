@@ -62,7 +62,7 @@ public class MemberRepositorySupport extends QuerydslRepositorySupport {
             .fetch();
         return list.stream().findFirst();
     }
-
+              
     @Transactional
     public Optional<MemberEntity> findByEmailAndLoginId(MemberRequestDto memberRequestDto) {
         List<MemberEntity> list = queryFactory.selectFrom(qMemberEntity)
@@ -79,7 +79,7 @@ public class MemberRepositorySupport extends QuerydslRepositorySupport {
     public Long updatePasswordByLoginId(MemberRequestDto memberRequestDto) {
         return queryFactory.update(qMemberEntity)
             .set(qMemberEntity.password,
-                passwordEncoder.encode(memberRequestDto.getNewPassword()))
+                passwordEncoder.encode(memberRequestDto.getPassword()))
             .set(qMemberEntity.updateDateTime, LocalDateTime.now())
             .where(
                 qMemberEntity.loginId.eq(memberRequestDto.getLoginId())
