@@ -120,7 +120,8 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
                     Expressions.as(
                         JPAExpressions.select(qMenuReviewEntity.star.avg())
                             .from(qMenuReviewEntity)
-                            .where(qMenuReviewEntity.menuId.eq(qMenuEntity.id)), star
+                            .where(qMenuReviewEntity.menuId.eq(qMenuEntity.id),
+                                qMenuReviewEntity.useYn.eq("Y")), star
                     ),
                     ExpressionUtils.as(
                         JPAExpressions.select(qMenuLogEntity.insertDateTime.max())
