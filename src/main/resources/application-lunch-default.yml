@@ -1,0 +1,48 @@
+
+spring:
+  profiles:
+    active: [PROFILE]
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: [URL]
+    username: [USER_NAME]
+    password: [USER_PWD]
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 100MB
+
+server:
+  port: [PORT]
+
+mybatis:
+  mapper-locations: mybatis/mapper/*.xml
+  type-aliases-package: com.lunchteam.lunchrestapi.api.dto.menu
+  configuration:
+    map-underscore-to-camel-case: true
+
+logging:
+  level:
+    root: info
+    com.lunchteam: debug
+    org.hibernate:
+      SQL: debug
+      type:
+        descriptor:
+          sql:
+            BasicBinder: trace
+
+jwt:
+  secret: [128_BYTE_KEY]
+
+cors:
+  all: true
+  ip: http://[IP]
+  port: [PORT]
+
+file:
+  directory: [UPLOAD_FILE_DIR]
