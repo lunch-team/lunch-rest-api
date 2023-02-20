@@ -63,7 +63,9 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
                             .where(qMenuCategory.id.eq(qMenu.category3)),
                         categoryName3
                     ),
-                    qMenu.order
+                    qMenu.imgUrl,
+                    qMenu.order,
+                    qMenu.regDt
                 )
             ).from(qMenu)
             .where(
@@ -76,6 +78,9 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
 
     @Transactional
     public Menu selectMenuByTypeAndId(MenuRequestDto dto) {
+        StringPath categoryName1 = Expressions.stringPath("categoryName1");
+        StringPath categoryName2 = Expressions.stringPath("categoryName2");
+        StringPath categoryName3 = Expressions.stringPath("categoryName3");
         JPAQuery<Menu> query = queryFactory
             .select(Projections.fields(Menu.class,
                     qMenu.id,
@@ -85,7 +90,27 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
                     qMenu.category1,
                     qMenu.category2,
                     qMenu.category3,
-                    qMenu.order
+                    Expressions.as(
+                        JPAExpressions.select(qMenuCategory.name)
+                            .from(qMenuCategory)
+                            .where(qMenuCategory.id.eq(qMenu.category1)),
+                        categoryName1
+                    ),
+                    Expressions.as(
+                        JPAExpressions.select(qMenuCategory.name)
+                            .from(qMenuCategory)
+                            .where(qMenuCategory.id.eq(qMenu.category2)),
+                        categoryName2
+                    ),
+                    Expressions.as(
+                        JPAExpressions.select(qMenuCategory.name)
+                            .from(qMenuCategory)
+                            .where(qMenuCategory.id.eq(qMenu.category3)),
+                        categoryName3
+                    ),
+                    qMenu.imgUrl,
+                    qMenu.order,
+                    qMenu.regDt
                 )
             ).from(qMenu)
             .where(

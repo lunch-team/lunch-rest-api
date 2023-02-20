@@ -2,6 +2,8 @@ package com.lunchteam.lunchrestapi.api.dto.yp.menu;
 
 import com.lunchteam.lunchrestapi.api.dto.yp.menu.Menu.MenuType;
 import com.lunchteam.lunchrestapi.api.entity.yp.MenuEntity;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,6 +27,7 @@ public class MenuRequestDto {
     private MenuType menuType;
 
     // 메뉴 명
+    @NotBlank
     private String name;
 
     // 메뉴 대분류
@@ -36,7 +39,11 @@ public class MenuRequestDto {
     // 메뉴 소분류
     private Long category3;
 
+    // 제품 이미지 url
+    private String imgUrl;
+
     // 요청한 로그인 유저의 아이디
+    @NotNull
     private Long userId;
 
     public MenuEntity toMenuByMenuType(MenuType menuType) {
@@ -47,6 +54,7 @@ public class MenuRequestDto {
             .category1(category1)
             .category2(category2)
             .category3(category3)
+            .imgUrl(imgUrl)
             .regId(userId)
             .build();
     }

@@ -1,13 +1,10 @@
 package com.lunchteam.lunchrestapi.api.dto.yp.menu;
 
 import java.time.LocalDateTime;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 @Getter
 @NoArgsConstructor
@@ -41,11 +38,12 @@ public class Menu {
     private Long category3;
     private String categoryName3;
 
-    @CreationTimestamp
+    // 제품 이미지 url
+    private String imgUrl;
+
     private LocalDateTime regDt;
     private Long regId;
 
-    @UpdateTimestamp
     private LocalDateTime uptDt;
     private Long uptId;
 
@@ -58,5 +56,9 @@ public class Menu {
         pizza("P");
 
         private final String value;
+
+        public boolean isEmpty() {
+            return this.value.isEmpty();
+        }
     }
 }

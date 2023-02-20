@@ -5,7 +5,9 @@ import com.lunchteam.lunchrestapi.api.dto.yp.menu.Menu.MenuType;
 import com.lunchteam.lunchrestapi.api.dto.yp.menu.MenuRequestDto;
 import com.lunchteam.lunchrestapi.api.dto.yp.menu.MenuResponseDto;
 import com.lunchteam.lunchrestapi.api.response.BasicResponse;
+import com.lunchteam.lunchrestapi.api.response.ErrorResponse;
 import com.lunchteam.lunchrestapi.api.service.yp.MenuService;
+import com.lunchteam.lunchrestapi.handler.ErrorHandler;
 import com.lunchteam.lunchrestapi.handler.ResultHandler;
 import java.util.List;
 import javax.annotation.Resource;
@@ -73,11 +75,14 @@ public class MenuController {
         @Valid @RequestBody MenuRequestDto dto,
         Errors errors
     ) {
-        log.debug("type: " + type);
-        log.debug("dto: " + dto.toString());
-        log.debug("errors: " + errors.toString());
-
         try {
+            ResponseEntity<ErrorResponse> errorResponse
+                = ErrorHandler.getError(errors, new ErrorResponse());
+            if (type.isEmpty() || errorResponse != null) {
+                log.warn("Wrong Request.");
+                return errorResponse;
+            }
+
             menuService.addMenu(type, dto);
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (Exception e) {

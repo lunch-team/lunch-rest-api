@@ -33,6 +33,19 @@ public class MenuResponseDto extends BasicResponseDto {
 
     // 메뉴 소분류
     private Long category3;
+
+    // 메뉴 대분류 명
+    private String categoryName1;
+
+    // 메뉴 중분류 명
+    private String categoryName2;
+
+    // 메뉴 소분류 명
+    private String categoryName3;
+
+    // 제품 이미지 url
+    private String imgUrl;
+
     private LocalDateTime regDt;
 
     public static MenuResponseDto of(Menu menu) {
@@ -44,6 +57,10 @@ public class MenuResponseDto extends BasicResponseDto {
             .category1(menu.getCategory1())
             .category2(menu.getCategory2())
             .category3(menu.getCategory3())
+            .categoryName1(menu.getCategoryName1())
+            .categoryName2(menu.getCategoryName2())
+            .categoryName3(menu.getCategoryName3())
+            .imgUrl(menu.getImgUrl())
             .regDt(menu.getRegDt())
             .build();
     }
