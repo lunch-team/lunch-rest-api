@@ -79,7 +79,7 @@ public class MenuController {
             ResponseEntity<ErrorResponse> errorResponse
                 = ErrorHandler.getError(errors, new ErrorResponse());
             if (type.isEmpty() || errorResponse != null) {
-                log.warn("Wrong Request.");
+                log.warn("[Wrong Request] >> " + dto.toString());
                 return errorResponse;
             }
 
