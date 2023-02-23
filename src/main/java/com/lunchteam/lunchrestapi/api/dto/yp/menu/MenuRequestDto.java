@@ -39,6 +39,9 @@ public class MenuRequestDto {
     // 메뉴 소분류
     private Long category3;
 
+    private Long priceLarge;
+    private Long priceMedium;
+
     // 제품 이미지 url
     private String imgUrl;
 
@@ -54,6 +57,8 @@ public class MenuRequestDto {
             .category1(category1)
             .category2(category2)
             .category3(category3)
+            .priceLarge(priceLarge)
+            .priceMedium(priceMedium)
             .imgUrl(imgUrl)
             .regId(userId)
             .build();
