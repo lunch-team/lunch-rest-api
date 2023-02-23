@@ -63,6 +63,8 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
                             .where(qMenuCategory.id.eq(qMenu.category3)),
                         categoryName3
                     ),
+                    qMenu.priceLarge,
+                    qMenu.priceMedium,
                     qMenu.imgUrl,
                     qMenu.order,
                     qMenu.regDt
@@ -108,6 +110,8 @@ public class MenuRepositorySupport extends QuerydslRepositorySupport {
                             .where(qMenuCategory.id.eq(qMenu.category3)),
                         categoryName3
                     ),
+                    qMenu.priceLarge,
+                    qMenu.priceMedium,
                     qMenu.imgUrl,
                     qMenu.order,
                     qMenu.regDt

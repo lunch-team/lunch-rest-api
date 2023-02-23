@@ -35,6 +35,9 @@ public class MenuEntity {
     @Column(name = "category_3")
     private Long category3;
 
+    private Long priceLarge;
+    private Long priceMedium;
+
     // 제품 이미지 url
     private String imgUrl;
 
@@ -57,6 +60,8 @@ public class MenuEntity {
         Long category1,
         Long category2,
         Long category3,
+        Long priceLarge,
+        Long priceMedium,
         String imgUrl,
         Long regId
     ) {
@@ -66,6 +71,8 @@ public class MenuEntity {
         this.category1 = category1;
         this.category2 = category2;
         this.category3 = category3;
+        this.priceLarge = priceLarge;
+        this.priceMedium = priceMedium;
         this.imgUrl = imgUrl;
         this.regId = regId;
         this.uptId = regId;

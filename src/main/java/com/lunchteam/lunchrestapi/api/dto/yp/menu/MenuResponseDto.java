@@ -43,6 +43,9 @@ public class MenuResponseDto extends BasicResponseDto {
     // 메뉴 소분류 명
     private String categoryName3;
 
+    private Long priceLarge;
+    private Long priceMedium;
+
     // 제품 이미지 url
     private String imgUrl;
 
@@ -60,6 +63,8 @@ public class MenuResponseDto extends BasicResponseDto {
             .categoryName1(menu.getCategoryName1())
             .categoryName2(menu.getCategoryName2())
             .categoryName3(menu.getCategoryName3())
+            .priceLarge(menu.getPriceLarge())
+            .priceMedium(menu.getPriceMedium())
             .imgUrl(menu.getImgUrl())
             .regDt(menu.getRegDt())
             .build();

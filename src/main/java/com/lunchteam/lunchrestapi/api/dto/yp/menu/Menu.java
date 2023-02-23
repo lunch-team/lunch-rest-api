@@ -38,6 +38,9 @@ public class Menu {
     private Long category3;
     private String categoryName3;
 
+    private Long priceLarge;
+    private Long priceMedium;
+
     // 제품 이미지 url
     private String imgUrl;
 
